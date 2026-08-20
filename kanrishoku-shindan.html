@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>管理職マネジメント診断 | 暁月</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Noto+Serif+JP:wght@400;600&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FAF7F0;
+    --paper-deep:#F1ECE0;
+    --ink:#20263A;
+    --ink-soft:#565C70;
+    --gold:#B9863B;
+    --gold-deep:#8C6427;
+    --teal:#3F6E68;
+    --clay:#B3543E;
+    --line:#DCD4C0;
+    --white:#FFFFFF;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Noto Sans JP', sans-serif;
+    line-height:1.85;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:760px; margin:0 auto; padding:64px 28px 96px;}
+  .serif{font-family:'Noto Serif JP', serif;}
+  .mincho{font-family:'Shippori Mincho', serif;}
+
+  /* ---------- screens ---------- */
+  .screen{display:none;}
+  .screen.active{display:block; animation:fadeIn .5s ease both;}
+  @keyframes fadeIn{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);}}
+
+  /* ---------- intro ---------- */
+  .eyebrow{
+    font-size:12.5px; letter-spacing:.28em; color:var(--gold-deep);
+    text-transform:uppercase; margin-bottom:18px; font-weight:700;
+  }
+  h1.title{
+    font-size:34px; font-weight:700; letter-spacing:.02em; line-height:1.55;
+    margin-bottom:26px; color:var(--ink);
+  }
+  .lede{
+    font-size:15.5px; color:var(--ink-soft); max-width:56ch; margin-bottom:14px;
+  }
+  .divider{
+    width:44px; height:1px; background:var(--gold); margin:34px 0;
+  }
+  .meta-row{
+    display:flex; gap:28px; margin-bottom:38px; font-size:13px; color:var(--ink-soft);
+  }
+  .meta-row span b{color:var(--ink); font-weight:700;}
+  .start-btn{
+    appearance:none; border:none; cursor:pointer;
+    background:var(--ink); color:var(--paper);
+    font-family:'Noto Serif JP', serif;
+    font-size:15.5px; letter-spacing:.06em;
+    padding:16px 36px; border-radius:2px;
+    transition:background .25s ease, transform .15s ease;
+  }
+  .start-btn:hover{background:var(--gold-deep);}
+  .start-btn:active{transform:scale(.98);}
+  .axis-preview{
+    margin-top:52px; display:grid; grid-template-columns:repeat(5,1fr); gap:10px;
+  }
+  .axis-chip{
+    border:.5px solid var(--line); padding:12px 8px; text-align:center; border-radius:2px;
+    background:var(--white);
+  }
+  .axis-chip .n{display:block; font-size:11px; color:var(--ink-soft); margin-bottom:4px; letter-spacing:.05em;}
+  .axis-chip .l{font-size:12.5px; font-weight:500;}
+
+  /* ---------- quiz ---------- */
+  .qhead{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px;}
+  .qcount{font-size:12.5px; color:var(--ink-soft); letter-spacing:.05em;}
+  .qaxis{font-size:11.5px; color:var(--gold-deep); letter-spacing:.1em; font-weight:700;}
+  .progress-track{
+    width:100%; height:2px; background:var(--line); margin-bottom:52px; position:relative; overflow:hidden;
+  }
+  .progress-fill{
+    height:100%; background:var(--gold); width:0%; transition:width .5s ease;
+  }
+  .qtext{
+    font-family:'Noto Serif JP', serif; font-size:22px; line-height:1.75;
+    margin-bottom:40px; min-height:120px;
+  }
+  .options{display:flex; flex-direction:column; gap:10px;}
+  .opt{
+    text-align:left; width:100%; border:.5px solid var(--line); background:var(--white);
+    padding:17px 20px; font-size:14.5px; cursor:pointer; border-radius:2px;
+    color:var(--ink); transition:all .18s ease; font-family:'Noto Sans JP',sans-serif;
+    display:flex; align-items:center; gap:14px;
+  }
+  .opt .dot{width:8px; height:8px; border-radius:50%; border:1px solid var(--ink-soft); flex-shrink:0;}
+  .opt:hover{border-color:var(--gold); background:var(--paper-deep);}
+  .opt:hover .dot{background:var(--gold); border-color:var(--gold);}
+  .back-link{
+    margin-top:36px; font-size:12.5px; color:var(--ink-soft); background:none; border:none;
+    cursor:pointer; letter-spacing:.03em; text-decoration:underline; text-underline-offset:3px;
+  }
+
+  /* ---------- result ---------- */
+  .result-head{display:flex; align-items:flex-start; gap:26px; margin-bottom:14px;}
+  .stamp{
+    width:78px; height:78px; border:2.5px solid var(--clay); border-radius:50%;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+    color:var(--clay); font-family:'Shippori Mincho', serif; font-weight:700; font-size:13px;
+    line-height:1.3; text-align:center; transform:rotate(-6deg);
+    box-shadow: inset 0 0 0 1px rgba(179,84,62,.25);
+  }
+  .result-eyebrow{font-size:12px; letter-spacing:.22em; color:var(--ink-soft); text-transform:uppercase; margin-bottom:8px;}
+  h2.result-title{
+    font-family:'Shippori Mincho', serif; font-size:29px; font-weight:700; line-height:1.5; color:var(--ink);
+  }
+  .result-tagline{font-size:15px; color:var(--ink-soft); margin:14px 0 36px; max-width:58ch;}
+
+  .radar-block{
+    background:var(--white); border:.5px solid var(--line); border-radius:4px;
+    padding:32px 28px; margin-bottom:34px;
+  }
+  .radar-block svg{display:block; margin:0 auto;}
+  .axis-scores{margin-top:22px; display:flex; flex-direction:column; gap:12px;}
+  .axis-score-row{display:flex; align-items:center; gap:12px; font-size:13px;}
+  .axis-score-row .lbl{width:110px; flex-shrink:0; color:var(--ink-soft);}
+  .axis-score-row .bar-track{flex:1; height:6px; background:var(--paper-deep); border-radius:3px; overflow:hidden;}
+  .axis-score-row .bar-fill{height:100%; border-radius:3px;}
+  .axis-score-row .val{width:34px; text-align:right; font-weight:500; color:var(--ink);}
+
+  .section-block{margin-bottom:32px;}
+  .section-label{
+    font-size:12px; letter-spacing:.16em; text-transform:uppercase; color:var(--gold-deep);
+    font-weight:700; margin-bottom:14px;
+  }
+  .section-block p{font-size:14.5px; color:var(--ink); margin-bottom:10px;}
+  .section-block ul{padding-left:20px;}
+  .section-block li{font-size:14.5px; color:var(--ink); margin-bottom:9px; line-height:1.75;}
+
+  .prescription{
+    background:var(--paper-deep); border-left:3px solid var(--teal); border-radius:0 4px 4px 0;
+    padding:24px 26px; margin-bottom:34px;
+  }
+  .prescription .section-label{color:var(--teal);}
+
+  .closing-note{
+    border-top:.5px solid var(--line); padding-top:26px; margin-top:44px;
+    font-size:13px; color:var(--ink-soft); line-height:1.9;
+  }
+  .closing-note b{color:var(--ink); font-weight:500;}
+
+  .retry-btn{
+    appearance:none; border:.5px solid var(--line); background:var(--white); cursor:pointer;
+    font-family:'Noto Sans JP', sans-serif; font-size:13px; color:var(--ink-soft);
+    padding:12px 22px; border-radius:2px; margin-top:30px;
+  }
+  .retry-btn:hover{border-color:var(--gold); color:var(--ink);}
+
+  @media(max-width:520px){
+    .wrap{padding:44px 20px 72px;}
+    h1.title{font-size:27px;}
+    .axis-preview{grid-template-columns:repeat(3,1fr);}
+    .qtext{font-size:19px;}
+    .result-head{flex-direction:column;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ===== INTRO ===== -->
+  <section class="screen active" id="screen-intro">
+    <div class="eyebrow">Management Health Diagnosis</div>
+    <h1 class="title serif">管理職マネジメント診断<br>― あなたの会社の「型」を知る ―</h1>
+    <p class="lede">
+      管理職は、経営と現場のあいだで最も孤独になりやすい立場です。本人も気づかぬうちに蓄積した歪みは、
+      やがて部下の離職やチームの機能不全というかたちで表面化します。
+    </p>
+    <p class="lede">
+      全10問、約3分。あなたの会社の管理職が置かれている状況を5つの軸から診断し、
+      現在の「型」と、そこに潜むリスク、次に取るべき一手を提示します。
+    </p>
+    <div class="divider"></div>
+    <div class="meta-row">
+      <span><b>10問</b> の質問</span>
+      <span>所要時間 <b>約3分</b></span>
+      <span>5つの軸 × <b>診断タイプ判定</b></span>
+    </div>
+    <button class="start-btn" onclick="startQuiz()">診断をはじめる →</button>
+
+    <div class="axis-preview">
+      <div class="axis-chip"><span class="n">軸 01</span><span class="l">孤立度</span></div>
+      <div class="axis-chip"><span class="n">軸 02</span><span class="l">負荷</span></div>
+      <div class="axis-chip"><span class="n">軸 03</span><span class="l">権限委譲</span></div>
+      <div class="axis-chip"><span class="n">軸 04</span><span class="l">心理的安全性</span></div>
+      <div class="axis-chip"><span class="n">軸 05</span><span class="l">対話の質</span></div>
+    </div>
+  </section>
+
+  <!-- ===== QUIZ ===== -->
+  <section class="screen" id="screen-quiz">
+    <div class="qhead">
+      <span class="qcount" id="qcount">Q1 / 10</span>
+      <span class="qaxis" id="qaxis">孤立度</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="qtext serif" id="qtext"></div>
+    <div class="options" id="options"></div>
+    <button class="back-link" id="backBtn" onclick="goBack()" style="display:none;">← 前の質問に戻る</button>
+  </section>
+
+  <!-- ===== RESULT ===== -->
+  <section class="screen" id="screen-result">
+    <div class="result-head">
+      <div class="stamp" id="stampText"></div>
+      <div>
+        <div class="result-eyebrow">診断結果</div>
+        <h2 class="result-title" id="resultTitle"></h2>
+      </div>
+    </div>
+    <p class="result-tagline" id="resultTagline"></p>
+
+    <div class="radar-block">
+      <svg id="radarSvg" width="360" height="360" viewBox="0 0 360 360"></svg>
+      <div class="axis-scores" id="axisScores"></div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-label">特徴</div>
+      <ul id="traitList"></ul>
+    </div>
+
+    <div class="section-block">
+      <div class="section-label">起きやすいリスク</div>
+      <ul id="riskList"></ul>
+    </div>
+
+    <div class="prescription">
+      <div class="section-label">処方箋</div>
+      <p id="prescriptionText"></p>
+    </div>
+
+    <div class="closing-note">
+      この診断は、管理職が抱える孤立や負荷を早期に可視化するための簡易ツールです。
+      実際の組織課題は、規模・業種・文化によって異なる背景を持ちます。<br><br>
+      <b>暁月（あかつき）</b>では、社外CHROとして管理職の1on1同席や個別コーチングから、
+      離職防止を起点とした組織開発まで、経営と現場の間に立って伴走しています。
+      詳しく話を聞いてみたい場合は、担当者までお気軽にご相談ください。
+    </div>
+
+    <button class="retry-btn" onclick="restartQuiz()">もう一度診断する</button>
+  </section>
+
+</div>
+
+<script>
+const AXES = [
+  {id:'isolation',  label:'孤立度',       color:'#B3543E'},
+  {id:'overload',   label:'負荷',         color:'#B9863B'},
+  {id:'delegation', label:'権限委譲',     color:'#8C6427'},
+  {id:'safety',     label:'心理的安全性', color:'#3F6E68'},
+  {id:'dialogue',   label:'対話の質',     color:'#565C70'}
+];
+
+const QUESTIONS = [
+  {axis:'isolation', text:'管理職同士が、本音で相談し合える機会がほとんどない。'},
+  {axis:'isolation', text:'管理職が抱える悩みや失敗を、上司や社外の第三者に話せる場がない。'},
+  {axis:'overload',  text:'管理職はプレイヤー業務に追われ、マネジメントに割く時間がほとんど取れていない。'},
+  {axis:'overload',  text:'管理職の残業や仕事の持ち帰りが常態化している。'},
+  {axis:'delegation',text:'管理職は重要な判断のたびに、いちいち上位者の承認を仰がなければならない。'},
+  {axis:'delegation',text:'部下に仕事を任せず、管理職がすべて自分で抱え込む傾向がある。'},
+  {axis:'safety',    text:'部下が管理職に対して、反対意見や本音を言いにくい雰囲気がある。'},
+  {axis:'safety',    text:'ミスや失敗が起きたとき、原因の究明より「誰の責任か」が優先される。'},
+  {axis:'dialogue',  text:'1on1や面談が形骸化しており、業務進捗の確認だけで終わっている。'},
+  {axis:'dialogue',  text:'管理職は部下の話をじっくり聞くより、指示や説明が中心になりがちだ。'}
+];
+
+const OPTIONS = [
+  {label:'そう思わない',       score:0},
+  {label:'あまりそう思わない', score:1},
+  {label:'ややそう思う',       score:2},
+  {label:'そう思う',           score:3}
+];
+
+const TYPES = {
+  isolation:{
+    name:'管理職の孤立型',
+    stamp:'孤立型',
+    tagline:'管理職は現場と経営の板挟みの中で、誰にも本音を話せないまま孤独に意思決定を続けています。',
+    traits:[
+      '管理職同士の横のつながりが薄く、悩みや失敗を共有する習慣がない',
+      '「弱音を吐けない」という無言の規範が、階層の中で暗黙に共有されている',
+      '問題が個人の中で処理されるため、組織として学習が蓄積されにくい'
+    ],
+    risks:[
+      '管理職本人の燃え尽き・メンタル不調のリスクが表面化しにくいまま進行する',
+      '相談先を持たない管理職が突然離職し、後任育成が追いつかなくなる',
+      '孤立した管理職の不安が部下への過干渉や高圧的な態度として現れる'
+    ],
+    prescription:'まずは管理職に「安心して弱さを見せられる相手」を一人つくることが出発点です。社内の横のつながりを制度化する、あるいは利害関係のない社外の第三者（社外CHROやメンター）との定期的な対話の場を設けることで、孤立は着実にほどけていきます。'
+  },
+  overload:{
+    name:'プレイングマネージャー疲弊型',
+    stamp:'疲弊型',
+    tagline:'管理職は「管理」よりも「実務」に時間を奪われ、マネジメントが常に後回しになっています。',
+    traits:[
+      'プレイヤーとしての成果が評価軸の中心にあり、マネジメント業務が評価されにくい',
+      '管理職の稼働時間の大半が個人のタスク処理に費やされている',
+      '「自分がやったほうが早い」という思考がチームの育成機会を奪っている'
+    ],
+    risks:[
+      '管理職の疲弊が長期化し、判断力やチームへの関心が徐々に低下する',
+      '部下の育成が後回しになり、次世代のマネジメント人材が育たない',
+      '管理職の疲弊感が伝播し、チーム全体の士気低下につながる'
+    ],
+    prescription:'管理職の業務棚卸しを行い、「本人でなければできない仕事」と「委譲できる仕事」を切り分けることが急務です。あわせて評価制度にマネジメント貢献の視点を組み込み、実務から一歩引くことが正しく報われる状態をつくることが根本解決につながります。'
+  },
+  delegation:{
+    name:'権限委譲不全型',
+    stamp:'委譲不全',
+    tagline:'意思決定の権限が上位に集中し、管理職は「実行者」の役割にとどまっています。',
+    traits:[
+      '管理職の裁量が限定的で、承認プロセスに多くの時間が費やされている',
+      '管理職自身も部下に権限を委ねることに慣れておらず、抱え込みが連鎖している',
+      '意思決定のスピードが遅く、現場の機動力が発揮されにくい'
+    ],
+    risks:[
+      '「任されている実感」を持てない管理職の当事者意識が徐々に薄れる',
+      '意思決定の遅さが、成長意欲の高い人材の流出につながる',
+      '権限の不在が「指示待ち文化」として組織全体に波及する'
+    ],
+    prescription:'管理職に委ねる意思決定の範囲を明文化し、小さな成功体験から段階的に裁量を広げていくことが有効です。上位者自身が「任せる」ことへの不安と向き合うプロセスも、あわせて必要になります。'
+  },
+  safety:{
+    name:'心理的安全性欠如型',
+    stamp:'安全性欠如',
+    tagline:'本音を言うことにリスクが伴う空気があり、対話よりも防御が優先されています。',
+    traits:[
+      '失敗が個人の責任として扱われ、率直なフィードバックが交わされにくい',
+      '部下が管理職に異論を唱えることに心理的なコストを感じている',
+      '「言っても変わらない」という諦めが、静かなエンゲージメント低下として蓄積している'
+    ],
+    risks:[
+      '問題の早期発見が遅れ、小さな綻びが大きなトラブルに発展しやすい',
+      '静かな不満を抱えたまま働き続ける「静かな退職」状態が広がる',
+      '優秀な人材ほど、発言できない環境に見切りをつけて離れていく'
+    ],
+    prescription:'管理職自身が「弱さを見せる」姿を部下に示すことが、心理的安全性づくりの起点になります。加えて、失敗を個人の責任ではなく仕組みの課題として扱う文化への転換が、対話の質を根本から変えていきます。'
+  },
+  dialogue:{
+    name:'対話不足型',
+    stamp:'対話不足',
+    tagline:'1on1や面談は形式として存在していても、業務確認に終始し、対話としては機能していません。',
+    traits:[
+      '面談の議題が進捗確認に偏り、部下の内面や意欲に触れる機会が少ない',
+      '管理職の会話が「話す」中心で、「聴く」時間が圧倒的に不足している',
+      '部下一人ひとりの価値観や志向を、管理職が十分に把握できていない'
+    ],
+    risks:[
+      '部下の変化やモチベーション低下の兆候を、管理職が察知できないまま進行する',
+      '形骸化した1on1が「意味のない時間」として部下に受け止められる',
+      '対話不足が信頼関係の希薄化を招き、離職の予兆を見逃しやすくなる'
+    ],
+    prescription:'1on1の目的を「進捗確認」から「傾聴と内省の支援」へ再設計することが第一歩です。管理職向けの傾聴・質問スキルのトレーニングを通じて、対話の「質」を意図的に底上げしていく必要があります。'
+  },
+  healthy:{
+    name:'自走型',
+    stamp:'自走型',
+    tagline:'孤立・負荷・権限・安全性・対話のいずれも大きな歪みは見られず、管理職が自律的に機能しています。',
+    traits:[
+      '管理職同士、また上位者との相談経路が機能している',
+      'マネジメントに一定の時間と裁量が確保されている',
+      '部下との対話が形式ではなく、実質的な信頼関係の基盤になっている'
+    ],
+    risks:[
+      '現状の健全さは、特定の管理職個人の資質に依存している可能性がある',
+      '組織の成長や異動によって、これまでの均衡が崩れるリスクは常にある',
+      '「うまくいっている」ことが、次の課題への着手を遅らせる場合がある'
+    ],
+    prescription:'現状の良い状態を「個人の頑張り」から「仕組み」へ移していくことが、次の一手になります。うまくいっている管理職の関わり方を言語化し、他の管理職や次世代のリーダーに継承していく仕組みづくりを検討してみてください。'
+  }
+};
+
+let current = 0;
+let answers = [];
+
+function startQuiz(){
+  current = 0;
+  answers = [];
+  document.getElementById('screen-intro').classList.remove('active');
+  document.getElementById('screen-quiz').classList.add('active');
+  renderQuestion();
+}
+
+function renderQuestion(){
+  const q = QUESTIONS[current];
+  const axisLabel = AXES.find(a=>a.id===q.axis).label;
+  document.getElementById('qcount').textContent = `Q${current+1} / ${QUESTIONS.length}`;
+  document.getElementById('qaxis').textContent = axisLabel;
+  document.getElementById('qtext').textContent = q.text;
+  document.getElementById('progressFill').style.width = `${(current/QUESTIONS.length)*100}%`;
+  document.getElementById('backBtn').style.display = current>0 ? 'block' : 'none';
+
+  const optWrap = document.getElementById('options');
+  optWrap.innerHTML = '';
+  OPTIONS.forEach(opt=>{
+    const btn = document.createElement('button');
+    btn.className = 'opt';
+    btn.innerHTML = `<span class="dot"></span>${opt.label}`;
+    btn.onclick = () => selectAnswer(opt.score);
+    optWrap.appendChild(btn);
+  });
+}
+
+function selectAnswer(score){
+  answers[current] = score;
+  current++;
+  if(current < QUESTIONS.length){
+    renderQuestion();
+  }else{
+    showResult();
+  }
+}
+
+function goBack(){
+  if(current>0){
+    current--;
+    renderQuestion();
+  }
+}
+
+function restartQuiz(){
+  document.getElementById('screen-result').classList.remove('active');
+  document.getElementById('screen-intro').classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function computeScores(){
+  const scores = {};
+  AXES.forEach(a=>scores[a.id]=0);
+  QUESTIONS.forEach((q,i)=>{
+    scores[q.axis] += answers[i];
+  });
+  const pct = {};
+  AXES.forEach(a=>{
+    pct[a.id] = Math.round((scores[a.id]/6)*100);
+  });
+  return pct;
+}
+
+function determineType(pct){
+  let maxAxis = null, maxVal = -1;
+  AXES.forEach(a=>{
+    if(pct[a.id] > maxVal){
+      maxVal = pct[a.id];
+      maxAxis = a.id;
+    }
+  });
+  if(maxVal <= 33){
+    return 'healthy';
+  }
+  return maxAxis;
+}
+
+function drawRadar(pct){
+  const svg = document.getElementById('radarSvg');
+  const cx=180, cy=180, r=130;
+  const n = AXES.length;
+  const levels=[0.25,0.5,0.75,1];
+  let html = '';
+
+  levels.forEach(lv=>{
+    let pts = '';
+    for(let i=0;i<n;i++){
+      const ang = (Math.PI*2*i/n) - Math.PI/2;
+      const x = cx + Math.cos(ang)*r*lv;
+      const y = cy + Math.sin(ang)*r*lv;
+      pts += `${x.toFixed(1)},${y.toFixed(1)} `;
+    }
+    html += `<polygon points="${pts}" fill="none" stroke="#DCD4C0" stroke-width="1"/>`;
+  });
+
+  for(let i=0;i<n;i++){
+    const ang = (Math.PI*2*i/n) - Math.PI/2;
+    const x = cx + Math.cos(ang)*r;
+    const y = cy + Math.sin(ang)*r;
+    html += `<line x1="${cx}" y1="${cy}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="#DCD4C0" stroke-width="1"/>`;
+    const lx = cx + Math.cos(ang)*(r+30);
+    const ly = cy + Math.sin(ang)*(r+30);
+    html += `<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" font-size="12" font-family="Noto Sans JP, sans-serif" fill="#565C70" text-anchor="middle" dominant-baseline="middle">${AXES[i].label}</text>`;
+  }
+
+  let dataPts = '';
+  AXES.forEach((a,i)=>{
+    const val = pct[a.id]/100;
+    const ang = (Math.PI*2*i/n) - Math.PI/2;
+    const x = cx + Math.cos(ang)*r*val;
+    const y = cy + Math.sin(ang)*r*val;
+    dataPts += `${x.toFixed(1)},${y.toFixed(1)} `;
+  });
+  html += `<polygon points="${dataPts}" fill="#B9863B" fill-opacity="0.18" stroke="#B9863B" stroke-width="2"/>`;
+
+  AXES.forEach((a,i)=>{
+    const val = pct[a.id]/100;
+    const ang = (Math.PI*2*i/n) - Math.PI/2;
+    const x = cx + Math.cos(ang)*r*val;
+    const y = cy + Math.sin(ang)*r*val;
+    html += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="4" fill="#B9863B"/>`;
+  });
+
+  svg.innerHTML = html;
+}
+
+function showResult(){
+  document.getElementById('screen-quiz').classList.remove('active');
+  document.getElementById('screen-result').classList.add('active');
+
+  const pct = computeScores();
+  const typeKey = determineType(pct);
+  const type = TYPES[typeKey];
+
+  document.getElementById('stampText').textContent = type.stamp;
+  document.getElementById('resultTitle').textContent = `あなたの会社は「${type.name}」です`;
+  document.getElementById('resultTagline').textContent = type.tagline;
+
+  drawRadar(pct);
+
+  const axisScoresEl = document.getElementById('axisScores');
+  axisScoresEl.innerHTML = '';
+  AXES.forEach(a=>{
+    const row = document.createElement('div');
+    row.className = 'axis-score-row';
+    row.innerHTML = `
+      <span class="lbl">${a.label}</span>
+      <span class="bar-track"><span class="bar-fill" style="width:${pct[a.id]}%; background:${a.color};"></span></span>
+      <span class="val">${pct[a.id]}</span>
+    `;
+    axisScoresEl.appendChild(row);
+  });
+
+  const traitList = document.getElementById('traitList');
+  traitList.innerHTML = type.traits.map(t=>`<li>${t}</li>`).join('');
+
+  const riskList = document.getElementById('riskList');
+  riskList.innerHTML = type.risks.map(r=>`<li>${r}</li>`).join('');
+
+  document.getElementById('prescriptionText').textContent = type.prescription;
+
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+</script>
+</body>
+</html>
