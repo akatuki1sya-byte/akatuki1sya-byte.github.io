@@ -1,11 +1,482 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <title>はじめてのサイト</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>経営者マネジメント診断 | 暁月</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Noto+Serif+JP:wght@400;600&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FAF7F0;
+    --paper-deep:#F1ECE0;
+    --ink:#20263A;
+    --ink-soft:#565C70;
+    --gold:#B9863B;
+    --gold-deep:#8C6427;
+    --teal:#3F6E68;
+    --clay:#B3543E;
+    --line:#DCD4C0;
+    --white:#FFFFFF;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Noto Sans JP', sans-serif;
+    line-height:1.85;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:760px; margin:0 auto; padding:64px 28px 96px;}
+  .serif{font-family:'Noto Serif JP', serif;}
+  .mincho{font-family:'Shippori Mincho', serif;}
+
+  .screen{display:none;}
+  .screen.active{display:block; animation:fadeIn .5s ease both;}
+  @keyframes fadeIn{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);}}
+
+  .eyebrow{
+    font-size:12.5px; letter-spacing:.28em; color:var(--gold-deep);
+    text-transform:uppercase; margin-bottom:18px; font-weight:700;
+  }
+  h1.title{
+    font-size:32px; font-weight:700; letter-spacing:.02em; line-height:1.6;
+    margin-bottom:26px; color:var(--ink);
+  }
+  .lede{
+    font-size:15.5px; color:var(--ink-soft); max-width:56ch; margin-bottom:14px;
+  }
+  .divider{
+    width:44px; height:1px; background:var(--gold); margin:34px 0;
+  }
+  .meta-row{
+    display:flex; gap:28px; margin-bottom:38px; font-size:13px; color:var(--ink-soft);
+    flex-wrap:wrap;
+  }
+  .meta-row span b{color:var(--ink); font-weight:700;}
+  .start-btn{
+    appearance:none; border:none; cursor:pointer;
+    background:var(--ink); color:var(--paper);
+    font-family:'Noto Serif JP', serif;
+    font-size:15.5px; letter-spacing:.06em;
+    padding:16px 36px; border-radius:2px;
+    transition:background .25s ease, transform .2s ease;
+  }
+  .start-btn:hover{background:var(--gold-deep); transform:translateY(-1px);}
+
+  .q-progress{
+    display:flex; align-items:center; gap:14px; margin-bottom:44px;
+  }
+  .q-progress-track{
+    flex:1; height:2px; background:var(--line); position:relative;
+  }
+  .q-progress-fill{
+    position:absolute; top:0; left:0; height:2px; background:var(--gold);
+    transition:width .4s ease;
+  }
+  .q-progress-label{font-size:12px; color:var(--ink-soft); white-space:nowrap; letter-spacing:.08em;}
+  .q-axis{
+    font-size:12px; letter-spacing:.22em; color:var(--teal); text-transform:uppercase;
+    margin-bottom:20px; font-weight:700;
+  }
+  .q-text{
+    font-size:24px; line-height:1.75; margin-bottom:44px; color:var(--ink);
+    font-family:'Noto Serif JP', serif; font-weight:600;
+  }
+  .options{display:flex; flex-direction:column; gap:12px;}
+  .option-btn{
+    text-align:left; appearance:none; border:1px solid var(--line);
+    background:var(--white); cursor:pointer;
+    padding:18px 22px; border-radius:3px; font-size:15px; color:var(--ink);
+    font-family:'Noto Sans JP', sans-serif;
+    transition:border-color .2s ease, background .2s ease, transform .15s ease;
+    display:flex; align-items:center; gap:14px;
+  }
+  .option-btn:hover{border-color:var(--gold); background:var(--paper-deep); transform:translateX(3px);}
+  .option-num{
+    font-family:'Noto Serif JP', serif; font-size:13px; color:var(--gold-deep);
+    width:22px; height:22px; border:1px solid var(--gold); border-radius:50%;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .q-back{
+    margin-top:32px; background:none; border:none; cursor:pointer;
+    color:var(--ink-soft); font-size:13px; letter-spacing:.05em;
+    font-family:'Noto Sans JP', sans-serif;
+  }
+  .q-back:hover{color:var(--ink);}
+
+  .result-eyebrow{
+    font-size:12.5px; letter-spacing:.28em; color:var(--gold-deep);
+    text-transform:uppercase; margin-bottom:14px; font-weight:700;
+  }
+  .result-type{
+    font-family:'Shippori Mincho', serif; font-size:30px; font-weight:700;
+    line-height:1.6; margin-bottom:8px; color:var(--ink);
+  }
+  .result-sub{font-size:14px; color:var(--ink-soft); margin-bottom:36px;}
+  .radar-wrap{
+    background:var(--white); border:1px solid var(--line); border-radius:4px;
+    padding:32px 20px; margin-bottom:36px; display:flex; justify-content:center;
+  }
+  .block{
+    background:var(--white); border:1px solid var(--line); border-radius:4px;
+    padding:28px 26px; margin-bottom:20px;
+  }
+  .block h3{
+    font-family:'Noto Serif JP', serif; font-size:16px; margin-bottom:14px;
+    color:var(--ink); display:flex; align-items:center; gap:10px;
+  }
+  .block h3::before{content:''; width:6px; height:6px; background:var(--gold); border-radius:50%; flex-shrink:0;}
+  .block p{font-size:14.5px; color:var(--ink-soft);}
+  .axis-bars{display:flex; flex-direction:column; gap:14px; margin-top:6px;}
+  .axis-bar-row{display:flex; align-items:center; gap:14px; font-size:13.5px;}
+  .axis-bar-name{width:110px; flex-shrink:0; color:var(--ink-soft);}
+  .axis-bar-track{flex:1; height:8px; background:var(--paper-deep); border-radius:4px; overflow:hidden;}
+  .axis-bar-fill{height:100%; background:var(--teal); border-radius:4px; transition:width .8s ease;}
+  .axis-bar-pct{width:38px; text-align:right; color:var(--ink); font-weight:700;}
+
+  .cta-block{
+    margin-top:40px; padding:36px 30px; background:var(--ink); border-radius:4px;
+    color:var(--paper); text-align:left;
+  }
+  .cta-block .eyebrow{color:var(--gold);}
+  .cta-block p{color:#C9CBD8; font-size:14.5px; margin-bottom:22px; max-width:52ch;}
+  .cta-btn{
+    display:inline-block; appearance:none; border:1px solid var(--gold);
+    background:transparent; color:var(--paper); text-decoration:none;
+    font-family:'Noto Serif JP', serif; font-size:15px; letter-spacing:.05em;
+    padding:14px 30px; border-radius:2px; transition:background .25s ease;
+  }
+  .cta-btn:hover{background:var(--gold); color:var(--ink);}
+
+  .restart-btn{
+    margin-top:28px; background:none; border:none; cursor:pointer;
+    color:var(--ink-soft); font-size:13px; text-decoration:underline;
+  }
+
+  footer{
+    text-align:center; font-size:12px; color:var(--ink-soft); margin-top:60px;
+    letter-spacing:.05em;
+  }
+
+  @media(max-width:600px){
+    .wrap{padding:44px 20px 72px;}
+    h1.title{font-size:26px;}
+    .q-text{font-size:20px;}
+    .result-type{font-size:24px;}
+    .axis-bar-name{width:82px; font-size:12px;}
+  }
+</style>
 </head>
 <body>
-  <h1>こんにちは！</h1>
-  <p>はじめてのホームページです。</p>
+<div class="wrap">
+
+  <section class="screen active" id="screen-intro">
+    <div class="eyebrow">Executive Self-Check · 暁月</div>
+    <h1 class="title mincho">経営者マネジメント診断<br>― その理想は、いま経営の中で叶っているか ―</h1>
+    <p class="lede">
+      10の問いに答えるだけで、あなたの経営スタイルが「孤独度」「負荷」「権限委譲」「心理的距離」「対話の質」の5軸でどう傾いているかを可視化します。
+    </p>
+    <p class="lede">
+      正しい答えはありません。今の実感に、正直に。
+    </p>
+    <div class="divider"></div>
+    <div class="meta-row">
+      <span>所要時間　<b>約3分</b></span>
+      <span>設問数　<b>10問</b></span>
+      <span>費用　<b>無料</b></span>
+    </div>
+    <button class="start-btn" onclick="startQuiz()">診断をはじめる →</button>
+  </section>
+
+  <section class="screen" id="screen-question">
+    <div class="q-progress">
+      <div class="q-progress-track"><div class="q-progress-fill" id="progressFill"></div></div>
+      <div class="q-progress-label" id="progressLabel">1 / 10</div>
+    </div>
+    <div class="q-axis" id="qAxis"></div>
+    <div class="q-text" id="qText"></div>
+    <div class="options" id="qOptions"></div>
+    <button class="q-back" id="qBack" onclick="prevQuestion()" style="display:none;">← 前の質問に戻る</button>
+  </section>
+
+  <section class="screen" id="screen-result">
+    <div class="result-eyebrow">Diagnosis Result</div>
+    <div class="result-type mincho" id="resultType"></div>
+    <div class="result-sub" id="resultSub"></div>
+
+    <div class="radar-wrap">
+      <svg id="radarChart" width="320" height="320" viewBox="0 0 320 320"></svg>
+    </div>
+
+    <div class="block">
+      <h3>傾向</h3>
+      <p id="resultTrait"></p>
+    </div>
+
+    <div class="block">
+      <h3>各軸のスコア</h3>
+      <div class="axis-bars" id="axisBars"></div>
+    </div>
+
+    <div class="block">
+      <h3>このタイプが抱えやすいリスク</h3>
+      <p id="resultRisk"></p>
+    </div>
+
+    <div class="block">
+      <h3>処方箋</h3>
+      <p id="resultRx"></p>
+    </div>
+
+    <div class="cta-block">
+      <div class="eyebrow">暁月 ― 社外CHRO</div>
+      <p id="ctaText"></p>
+      <a class="cta-btn" href="https://forms.gle/Yr7xzcNVf9dCAuqC9" target="_blank" rel="noopener">経営の対話をはじめる →</a>
+    </div>
+
+    <button class="restart-btn" onclick="restartQuiz()">もう一度診断する</button>
+  </section>
+
+  <footer>暁月 Akatsuki ― 国家資格キャリアコンサルタントによる社外CHRO支援</footer>
+</div>
+
+<script>
+const AXES = [
+  { key:'isolation', label:'孤独度' },
+  { key:'load',       label:'負荷' },
+  { key:'delegation', label:'権限委譲' },
+  { key:'distance',   label:'心理的距離' },
+  { key:'dialogue',   label:'対話の質' }
+];
+
+const QUESTIONS = [
+  { axis:'isolation', text:'重要な経営判断について、心から相談できる相手が社内にいないと感じる。' },
+  { axis:'isolation', text:'自分の弱さや迷いを見せられる場所が、今の生活の中にほとんどない。' },
+  { axis:'load',       text:'「自分がいないと現場が回らない」という感覚が常につきまとう。' },
+  { axis:'load',       text:'休んでいる間も、仕事のことが頭から離れず気が休まらない。' },
+  { axis:'delegation', text:'部下に任せるより、自分でやった方が早いと感じる場面が多い。' },
+  { axis:'delegation', text:'重要な意思決定のほとんどを、最終的に自分一人で下している。' },
+  { axis:'distance',   text:'社員が自分にどう思われているか、正直に話してくれている自信がない。' },
+  { axis:'distance',   text:'部下の本音や不満を、人づてに知ることがよくある。' },
+  { axis:'dialogue',   text:'1on1などの対話の時間が、業務連絡だけで終わってしまいがちだ。' },
+  { axis:'dialogue',   text:'社員と将来のビジョンについてじっくり語り合う機会が、ここ最近ない。' }
+];
+
+const OPTIONS = [
+  { label:'まったく当てはまらない', value:0 },
+  { label:'あまり当てはまらない',   value:1 },
+  { label:'やや当てはまる',         value:2 },
+  { label:'強く当てはまる',         value:3 }
+];
+
+const TYPES = {
+  isolation: {
+    name:'孤高の灯台型',
+    sub:'誰よりも先を見ているからこそ、隣に立つ人がいない。',
+    trait:'あなたは常に一歩先の景色を見ながら経営を担っています。しかしその視座の高さゆえに、今の悩みを対等に語れる相手が周囲から少しずつ減っている状態かもしれません。灯台は海を照らしますが、灯台自身の孤独に気づく者は多くありません。',
+    risk:'孤独な意思決定が続くと、判断の偏りに自分自身で気づけなくなるリスクがあります。また、経営者の孤立は、結果として組織全体の心理的距離にも波及しやすい傾向があります。',
+    rx:'まずは「壁打ち相手」を意図的に外部に持つことが有効です。利害関係のない第三者との定期的な対話は、判断の解像度を上げるだけでなく、経営者自身の精神的な支柱にもなります。'
+  },
+  load: {
+    name:'プレイヤー社長型',
+    sub:'現場を愛するあまり、経営の椅子から離れられずにいる。',
+    trait:'現場感覚を大切にする姿勢は、あなたの経営の強みです。一方で、自分が動き続けることで組織を支えている実感が強く、負荷が慢性的に高止まりしている可能性があります。優秀な経営者ほど、この罠に陥りやすいものです。',
+    risk:'経営者自身の負荷が高い状態が続くと、意思決定の質が低下するだけでなく、後継人材の育成機会そのものが失われていきます。',
+    rx:'「自分にしかできない仕事」と「今は自分がやっているだけの仕事」を分けて棚卸しすることから始めましょう。後者を手放す仕組みづくりが、次のステージへの鍵になります。'
+  },
+  delegation: {
+    name:'ワンマン経営型',
+    sub:'速さと質を求めるほど、権限が自分に集中していく。',
+    trait:'意思決定の速さと精度において、あなたは高い基準を持っています。しかしその基準の高さゆえに、任せることへの不安が権限委譲を遠ざけている状態かもしれません。組織はあなたの能力の総量で止まってしまいます。',
+    risk:'権限が集中したままでは、組織の成長速度は経営者一人のキャパシティに縛られます。また、経営者不在時の意思決定機能が育たないという構造的なリスクも抱えます。',
+    rx:'「70点で任せる」という基準をあえて設けることが有効です。完璧な権限移譲を待つのではなく、小さな意思決定から段階的に手放していく設計が組織の自走力を育てます。'
+  },
+  distance: {
+    name:'見えない壁type',
+    sub:'悪気なく、いつの間にか本音が届かなくなっている。',
+    trait:'あなたは決して威圧的なリーダーではないはずです。それでも役職という立場そのものが、知らず知らずのうちに社員との間に見えない壁を作っている可能性があります。本音は、聞こうとしなければ届きません。',
+    risk:'経営者に本音が届かない組織では、問題が小さいうちに発見されず、離職や不満が突然表面化するという形で現れやすくなります。',
+    rx:'「意見を求める」より「先に自分の弱さを開示する」ことが、対話の壁を薄くする一番の近道です。心理的距離は、立場ではなく振る舞いによって縮まります。'
+  },
+  dialogue: {
+    name:'業務連絡型リーダー',
+    sub:'伝えることはできても、語り合う時間が足りていない。',
+    trait:'あなたは情報伝達においては非常に的確なリーダーです。一方で、業務の効率を優先するあまり、社員と未来や想いについて語り合う時間そのものが後回しになっている可能性があります。',
+    risk:'対話の質が業務連絡に偏ると、社員はビジョンへの共感よりも指示への従属で動くようになり、主体性や定着率に影響が及びます。',
+    rx:'月に一度でも構いません。「進捗」ではなく「想い」を尋ねる時間を意図的に設計することが、対話の質を変える最初の一歩です。'
+  },
+  balanced: {
+    name:'自走型経営者',
+    sub:'今のところ、大きな偏りは見られません。',
+    trait:'現時点での回答からは、特定の軸に強い偏りは見られませんでした。孤独・負荷・権限委譲・心理的距離・対話のバランスが比較的取れている状態と言えます。',
+    risk:'バランスが取れている状態でも、組織のフェーズが変わるタイミング（拡大・世代交代など）で、これまで意識してこなかった軸が急に課題化することがあります。',
+    rx:'今のバランスを保ちながらも、半年に一度など定期的にこの診断を振り返り、変化の兆しに早めに気づける仕組みを持っておくことをおすすめします。'
+  }
+};
+
+let current = 0;
+let answers = new Array(QUESTIONS.length).fill(null);
+
+function startQuiz(){
+  showScreen('screen-question');
+  renderQuestion();
+}
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function renderQuestion(){
+  const q = QUESTIONS[current];
+  const axisLabel = AXES.find(a => a.key === q.axis).label;
+  document.getElementById('qAxis').textContent = axisLabel;
+  document.getElementById('qText').textContent = q.text;
+  document.getElementById('progressLabel').textContent = (current+1) + ' / ' + QUESTIONS.length;
+  document.getElementById('progressFill').style.width = ((current)/QUESTIONS.length*100) + '%';
+  document.getElementById('qBack').style.display = current > 0 ? 'inline-block' : 'none';
+
+  const optWrap = document.getElementById('qOptions');
+  optWrap.innerHTML = '';
+  OPTIONS.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = '<span class="option-num">' + (i+1) + '</span><span>' + opt.label + '</span>';
+    btn.onclick = () => selectAnswer(opt.value);
+    optWrap.appendChild(btn);
+  });
+}
+
+function selectAnswer(value){
+  answers[current] = value;
+  if(current < QUESTIONS.length - 1){
+    current++;
+    renderQuestion();
+  } else {
+    showResult();
+  }
+}
+
+function prevQuestion(){
+  if(current > 0){
+    current--;
+    renderQuestion();
+  }
+}
+
+function restartQuiz(){
+  current = 0;
+  answers = new Array(QUESTIONS.length).fill(null);
+  showScreen('screen-intro');
+}
+
+function computeScores(){
+  const scores = {};
+  AXES.forEach(a => scores[a.key] = 0);
+  QUESTIONS.forEach((q, i) => {
+    scores[q.axis] += answers[i] === null ? 0 : answers[i];
+  });
+  const pct = {};
+  AXES.forEach(a => pct[a.key] = Math.round(scores[a.key] / 6 * 100));
+  return pct;
+}
+
+function showResult(){
+  const pct = computeScores();
+  let topAxis = null, topVal = -1;
+  AXES.forEach(a => { if(pct[a.key] > topVal){ topVal = pct[a.key]; topAxis = a.key; } });
+
+  const typeKey = topVal <= 33 ? 'balanced' : topAxis;
+  const type = TYPES[typeKey];
+
+  document.getElementById('resultType').textContent = type.name;
+  document.getElementById('resultSub').textContent = type.sub;
+  document.getElementById('resultTrait').textContent = type.trait;
+  document.getElementById('resultRisk').textContent = type.risk;
+  document.getElementById('resultRx').textContent = type.rx;
+  document.getElementById('ctaText').textContent =
+    '「' + type.name + '」の傾向にある経営者の方から、実際にご相談をいただくケースが多くあります。国家資格キャリアコンサルタントが、あなたの経営とチームに伴走します。';
+
+  renderBars(pct);
+  renderRadar(pct);
+  showScreen('screen-result');
+}
+
+function renderBars(pct){
+  const wrap = document.getElementById('axisBars');
+  wrap.innerHTML = '';
+  AXES.forEach(a => {
+    const row = document.createElement('div');
+    row.className = 'axis-bar-row';
+    row.innerHTML =
+      '<div class="axis-bar-name">' + a.label + '</div>' +
+      '<div class="axis-bar-track"><div class="axis-bar-fill" style="width:' + pct[a.key] + '%"></div></div>' +
+      '<div class="axis-bar-pct">' + pct[a.key] + '%</div>';
+    wrap.appendChild(row);
+  });
+}
+
+function renderRadar(pct){
+  const svg = document.getElementById('radarChart');
+  const ns = 'http://www.w3.org/2000/svg';
+  const cx = 160, cy = 160, maxR = 110;
+  const n = AXES.length;
+  svg.innerHTML = '';
+
+  [0.25, 0.5, 0.75, 1].forEach(f => {
+    const pts = AXES.map((a, i) => polarPoint(cx, cy, maxR*f, i, n)).join(' ');
+    const poly = document.createElementNS(ns, 'polygon');
+    poly.setAttribute('points', pts);
+    poly.setAttribute('fill', 'none');
+    poly.setAttribute('stroke', '#DCD4C0');
+    poly.setAttribute('stroke-width', '1');
+    svg.appendChild(poly);
+  });
+
+  AXES.forEach((a, i) => {
+    const p = polarPoint(cx, cy, maxR, i, n);
+    const line = document.createElementNS(ns, 'line');
+    line.setAttribute('x1', cx); line.setAttribute('y1', cy);
+    line.setAttribute('x2', p.x); line.setAttribute('y2', p.y);
+    line.setAttribute('stroke', '#DCD4C0'); line.setAttribute('stroke-width', '1');
+    svg.appendChild(line);
+
+    const lp = polarPoint(cx, cy, maxR + 24, i, n);
+    const text = document.createElementNS(ns, 'text');
+    text.setAttribute('x', lp.x); text.setAttribute('y', lp.y);
+    text.setAttribute('text-anchor', 'middle');
+    text.setAttribute('dominant-baseline', 'middle');
+    text.setAttribute('font-size', '12');
+    text.setAttribute('font-family', 'Noto Sans JP, sans-serif');
+    text.setAttribute('fill', '#565C70');
+    text.textContent = a.label;
+    svg.appendChild(text);
+  });
+
+  const dataPts = AXES.map((a, i) => polarPoint(cx, cy, maxR * (pct[a.key]/100), i, n)).join(' ');
+  const dataPoly = document.createElementNS(ns, 'polygon');
+  dataPoly.setAttribute('points', dataPts);
+  dataPoly.setAttribute('fill', 'rgba(63,110,104,0.28)');
+  dataPoly.setAttribute('stroke', '#3F6E68');
+  dataPoly.setAttribute('stroke-width', '2');
+  svg.appendChild(dataPoly);
+
+  AXES.forEach((a, i) => {
+    const p = polarPoint(cx, cy, maxR * (pct[a.key]/100), i, n);
+    const dot = document.createElementNS(ns, 'circle');
+    dot.setAttribute('cx', p.x); dot.setAttribute('cy', p.y); dot.setAttribute('r', '3.5');
+    dot.setAttribute('fill', '#3F6E68');
+    svg.appendChild(dot);
+  });
+}
+
+function polarPoint(cx, cy, r, i, n){
+  const angle = (Math.PI * 2 * i / n) - Math.PI/2;
+  return { x: cx + r * Math.cos(angle), y: cy + r * Math.sin(angle) };
+}
+</script>
 </body>
 </html>
