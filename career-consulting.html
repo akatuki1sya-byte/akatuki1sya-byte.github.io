@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>キャリア相談 | 暁月</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Noto+Serif+JP:wght@400;600&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FAF7F0;
+    --paper-deep:#F1ECE0;
+    --ink:#20263A;
+    --ink-soft:#565C70;
+    --gold:#B9863B;
+    --gold-deep:#8C6427;
+    --teal:#3F6E68;
+    --clay:#B3543E;
+    --line:#DCD4C0;
+    --white:#FFFFFF;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Noto Sans JP', sans-serif;
+    line-height:1.9;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:760px; margin:0 auto; padding:80px 28px 100px;}
+  .serif{font-family:'Noto Serif JP', serif;}
+  .mincho{font-family:'Shippori Mincho', serif;}
+
+  .eyebrow{
+    font-size:12.5px; letter-spacing:.32em; color:var(--gold-deep);
+    text-transform:uppercase; font-weight:700; margin-bottom:22px; text-align:center;
+  }
+  h1.title{
+    font-family:'Shippori Mincho', serif; font-weight:700;
+    font-size:32px; line-height:1.75; color:var(--ink);
+    text-align:center; margin-bottom:36px;
+  }
+
+  .hero-image{
+    width:100%; height:280px; object-fit:cover; border-radius:4px;
+    filter:saturate(0.8) sepia(0.1); margin-bottom:48px;
+    border:1px solid var(--line);
+  }
+
+  .lede{
+    font-size:16px; color:var(--ink-soft); line-height:2.1;
+    text-align:center; max-width:520px; margin:0 auto 20px;
+  }
+
+  .questions{
+    margin:56px 0; padding:36px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+  }
+  .questions p{
+    font-family:'Shippori Mincho', serif; font-size:18px; line-height:2.1;
+    color:var(--ink); text-align:center; margin-bottom:22px;
+  }
+  .questions p:last-child{ margin-bottom:0; }
+
+  .body-text{
+    font-size:15px; color:var(--ink); line-height:2.1; margin-bottom:20px;
+  }
+  .body-text.center{ text-align:center; }
+
+  .cta-block{
+    margin-top:56px; text-align:center;
+  }
+  .cta-btn{
+    display:inline-block; appearance:none; border:1px solid var(--ink);
+    background:var(--ink); color:var(--paper); text-decoration:none;
+    font-family:'Noto Serif JP', serif; font-size:15.5px; letter-spacing:.05em;
+    padding:16px 44px; border-radius:2px;
+    transition:background .25s ease, transform .15s ease;
+  }
+  .cta-btn:hover{ background:var(--gold-deep); border-color:var(--gold-deep); }
+
+  .footnote{
+    margin-top:28px; font-size:12.5px; color:var(--ink-soft); text-align:center; line-height:1.9;
+  }
+
+  .divider{
+    width:44px; height:1px; background:var(--gold); margin:56px auto;
+  }
+
+  .closing{
+    text-align:center; font-family:'Shippori Mincho', serif; font-size:16px;
+    color:var(--ink-soft); line-height:2; margin-top:8px;
+  }
+
+  @media(max-width:560px){
+    .wrap{ padding:56px 22px 72px; }
+    h1.title{ font-size:25px; }
+    .hero-image{ height:200px; }
+    .questions p{ font-size:16px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="eyebrow">Career Consulting</div>
+  <h1 class="title">その転機に、<br>一人で向き合っていませんか。</h1>
+
+  <img class="hero-image" src="https://images.unsplash.com/photo-1757563856964-2eed45ee2884?w=1200&auto=format&fit=crop&q=75" alt="">
+
+  <p class="lede">
+    仕事のこと、これからのキャリアのこと。<br>
+    誰かに話すほどでもない、と思っていることほど、<br>
+    実は一人で抱え込んでいることがあります。
+  </p>
+
+  <div class="questions">
+    <p>「今の仕事を、このまま続けていいのだろうか」</p>
+    <p>「この先、何を大切に働いていきたいのだろう」</p>
+    <p>「この転機に、誰かと話してみたい」</p>
+  </div>
+
+  <p class="body-text center">
+    暁月では、国家資格キャリアコンサルタントが、<br>
+    転職や独立、昇進や異動、働き方の迷いなど、<br>
+    お一人おひとりのキャリアの転機に向き合っています。
+  </p>
+  <p class="body-text center">
+    答えを急いで出す場ではありません。<br>
+    まずは、今感じていることを言葉にするところから、<br>
+    一緒に始めませんか。
+  </p>
+
+  <div class="cta-block">
+    <a class="cta-btn" href="https://forms.gle/KG2VHgZyhCcK1Qg57" target="_top" onclick="window.top.location.href=this.href; return false;">キャリア相談を申し込む</a>
+    <div class="footnote">初回相談は無料です。オンライン・対面、いずれも対応しています。</div>
+  </div>
+
+  <div class="divider"></div>
+
+  <p class="closing">
+    「漠然としたこれから」を、<br>確かな「未来の姿」へ。
+  </p>
+
+</div>
+</body>
+</html>
