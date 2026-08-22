@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>階層別 離職コスト・シミュレーター | 暁月</title>
+<style>
+  :root{
+    --navy:#0D1B2A;
+    --navy-2:#122338;
+    --teal:#028FAA;
+    --teal-soft:#E4F3F6;
+    --gold:#C98A00;
+    --gold-soft:#FBF0DC;
+    --ink:#1B2430;
+    --muted:#5A6472;
+    --line:#E1E6EA;
+    --bg:#F7F8FA;
+    --white:#FFFFFF;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:"Meiryo UI","Meiryo",-apple-system,"Hiragino Kaku Gothic ProN",sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+  }
+  .wrap{max-width:1080px;margin:0 auto;padding:32px 24px 64px;}
+
+  .masthead{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    border-bottom:2px solid var(--navy);
+    padding-bottom:16px;
+    margin-bottom:28px;
+  }
+  .masthead .brand{font-size:12px;letter-spacing:.18em;color:var(--teal);font-weight:700;}
+  .masthead h1{
+    margin:6px 0 0;
+    font-size:26px;
+    color:var(--navy);
+    font-weight:700;
+    letter-spacing:.02em;
+  }
+  .masthead .sub{font-size:12.5px;color:var(--muted);margin-top:4px;}
+
+  .tabs{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:8px;
+    margin-bottom:20px;
+  }
+  .tab{
+    border:1px solid var(--line);
+    background:var(--white);
+    border-radius:10px;
+    padding:12px 10px;
+    text-align:center;
+    cursor:pointer;
+    transition:.15s ease;
+  }
+  .tab .lv{font-size:10.5px;color:var(--muted);letter-spacing:.08em;}
+  .tab .name{font-size:14.5px;font-weight:700;color:var(--navy);margin-top:2px;}
+  .tab.active{
+    border-color:var(--teal);
+    background:var(--teal-soft);
+    box-shadow:0 0 0 1px var(--teal) inset;
+  }
+  .tab.active .name{color:var(--teal);}
+
+  .panel{
+    display:grid;
+    grid-template-columns:1.05fr .95fr;
+    gap:0;
+    background:var(--white);
+    border:1px solid var(--line);
+    border-radius:14px;
+    overflow:hidden;
+  }
+  .inputs{padding:26px 28px;border-right:1px solid var(--line);}
+  .inputs h2{
+    font-size:15px;color:var(--navy);margin:0 0 18px;
+    display:flex;align-items:center;gap:8px;
+  }
+  .inputs h2 .dot{width:7px;height:7px;border-radius:50%;background:var(--gold);display:inline-block;}
+
+  .field{margin-bottom:18px;}
+  .field label{
+    display:flex;justify-content:space-between;align-items:baseline;
+    font-size:12.5px;color:var(--muted);margin-bottom:6px;
+  }
+  .field label .val{font-weight:700;color:var(--navy);font-size:13.5px;}
+  input[type=range]{
+    -webkit-appearance:none;width:100%;height:4px;border-radius:2px;
+    background:var(--line);outline:none;
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none;width:16px;height:16px;border-radius:50%;
+    background:var(--teal);cursor:pointer;border:2px solid var(--white);
+    box-shadow:0 0 0 1px var(--teal);
+  }
+  .hint{font-size:10.5px;color:#8892A0;margin-top:16px;line-height:1.6;}
+
+  .result{padding:26px 28px;background:var(--navy);color:var(--white);}
+  .result h2{font-size:15px;margin:0 0 4px;color:#AFC4D6;font-weight:600;}
+  .total{font-size:34px;font-weight:800;color:var(--white);margin:2px 0 2px;letter-spacing:.01em;}
+  .total .unit{font-size:14px;color:#AFC4D6;font-weight:500;margin-left:4px;}
+  .total-note{font-size:11px;color:#8DA2B8;margin-bottom:20px;}
+
+  .cumulative-box{
+    background:linear-gradient(135deg, rgba(201,138,0,.16), rgba(201,138,0,.05));
+    border:1px solid rgba(201,138,0,.45);
+    border-radius:10px;
+    padding:14px 16px;
+    margin-bottom:20px;
+  }
+  .cumulative-label{font-size:11.5px;color:var(--gold-soft);font-weight:600;margin-bottom:4px;letter-spacing:.02em;}
+  .cumulative-val{font-size:24px;font-weight:800;color:var(--gold-soft);}
+  .cumulative-val .unit{font-size:12.5px;color:#E8D4A8;font-weight:500;margin-left:4px;}
+
+  .bars{margin-bottom:18px;}
+  .bar-row{margin-bottom:12px;}
+  .bar-row .lbl{
+    display:flex;justify-content:space-between;font-size:11.5px;color:#C9D6E2;margin-bottom:5px;
+  }
+  .bar-track{height:9px;border-radius:5px;background:rgba(255,255,255,.10);overflow:hidden;}
+  .bar-fill{height:100%;border-radius:5px;}
+  .c1{background:var(--teal);}
+  .c2{background:#5AB8CC;}
+  .c3{background:var(--gold);}
+  .c4{background:#8A98A8;}
+
+  .compare{
+    margin-top:22px;padding-top:18px;border-top:1px solid rgba(255,255,255,.15);
+  }
+  .compare h3{font-size:11.5px;color:#AFC4D6;font-weight:600;margin:0 0 12px;letter-spacing:.04em;}
+  .clevel{display:flex;align-items:center;gap:10px;margin-bottom:9px;}
+  .clevel .cname{width:96px;font-size:10.5px;color:#C9D6E2;flex-shrink:0;}
+  .ctrack{flex:1;height:14px;border-radius:4px;background:rgba(255,255,255,.08);position:relative;}
+  .cfill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--teal),var(--gold));}
+  .cval{font-size:11px;color:var(--white);width:64px;text-align:right;flex-shrink:0;font-weight:700;}
+
+  .grand-total{
+    display:flex;justify-content:space-between;align-items:baseline;
+    margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.15);
+    font-size:13px;color:#C9D6E2;font-weight:600;
+  }
+  .grand-total span:last-child{font-size:17px;color:var(--gold-soft);font-weight:800;}
+
+  .foot{margin-top:22px;font-size:11px;color:var(--muted);line-height:1.8;}
+  .foot b{color:var(--navy);}
+
+  @media (max-width:720px){
+    .wrap{padding:16px 14px 48px;}
+    .masthead{padding-bottom:12px;margin-bottom:18px;}
+    .masthead h1{font-size:19px;line-height:1.4;}
+    .masthead .sub{font-size:11.5px;}
+
+    .tabs{grid-template-columns:repeat(2,1fr);gap:6px;margin-bottom:14px;}
+    .tab{padding:10px 6px;border-radius:8px;}
+    .tab .name{font-size:13px;}
+
+    .panel{grid-template-columns:1fr;border-radius:12px;}
+    .inputs{border-right:none;border-bottom:1px solid var(--line);padding:18px 16px;}
+    .result{padding:18px 16px;}
+
+    .field{margin-bottom:22px;}
+    .field label{font-size:12px;}
+    .field label .val{font-size:14px;}
+    /* 指で操作しやすいよう、つまみとトラックを大きくする */
+    input[type=range]{height:6px;}
+    input[type=range]::-webkit-slider-thumb{width:24px;height:24px;}
+    input[type=range]::-moz-range-thumb{
+      width:24px;height:24px;border-radius:50%;
+      background:var(--teal);border:2px solid var(--white);
+      box-shadow:0 0 0 1px var(--teal);
+    }
+
+    .total{font-size:28px;}
+    .total .unit{font-size:12.5px;}
+
+    .clevel{gap:8px;}
+    .clevel .cname{width:76px;font-size:9.5px;}
+    .cval{width:56px;font-size:10.5px;}
+
+    .foot{font-size:10.5px;padding:0 2px;}
+  }
+
+  @media (max-width:380px){
+    .tabs{grid-template-columns:1fr 1fr;}
+    .total{font-size:24px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="masthead">
+    <div>
+      <div class="brand">AKATSUKI &nbsp;暁月</div>
+      <h1>階層別 離職コスト・シミュレーター</h1>
+      <div class="sub">1名の離職・退職が発生した場合の推定損失コストを、階層別に可視化します</div>
+    </div>
+  </div>
+
+  <div class="tabs" id="tabs"></div>
+
+  <div class="panel">
+    <div class="inputs" id="inputs">
+      <h2><span class="dot"></span>前提条件を調整</h2>
+      <!-- fields injected -->
+    </div>
+    <div class="result">
+      <h2 id="resultLabel">推定損失コスト</h2>
+      <div class="total"><span id="totalVal">0</span><span class="unit">万円 / 1名</span></div>
+      <div class="total-note" id="ratioNote"></div>
+
+      <div class="cumulative-box" id="cumulativeBox">
+        <div class="cumulative-label" id="cumulativeLabel">直近5年の累計損失</div>
+        <div class="cumulative-val"><span id="cumulativeVal">0</span><span class="unit">万円</span></div>
+      </div>
+
+      <div class="bars" id="bars"></div>
+
+      <div class="compare">
+        <h3 id="compareTitle">階層別 比較(直近5年の累計損失)</h3>
+        <div id="compareList"></div>
+        <div class="grand-total">
+          <span>全階層 合計</span>
+          <span id="grandTotalVal">0万円</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <b>算出方法について</b>:①採用コスト(年収×採用コスト率)、②欠員期間中の逸失生産性(月次人件費相当×欠員月数)、③立上り期間の生産性ロス(月次人件費相当×立上り月数×未到達率)、④引継ぎ・周囲負荷コストの4項目を合算し、1名あたりの推定損失コストを算出しています。「直近5年の累計損失」は、この1名あたりコストに、当該階層で実際に離職した人数を掛け合わせた金額です。実際の損失は業種・職種・採用市場により変動するため、商談・提案時の目安としてご活用ください。
+  </div>
+</div>
+
+<script>
+const LEVELS = [
+  {
+    key:"junior", short:"若手", name:"新入社員・若手(1〜3年目)",
+    salary:400, vacancy:2, recruitRate:20, rampMonths:3, rampGap:40, handover:5, attritionCount:8
+  },
+  {
+    key:"mid", short:"中堅", name:"中堅社員(一般職)",
+    salary:550, vacancy:3, recruitRate:30, rampMonths:4, rampGap:40, handover:15, attritionCount:5
+  },
+  {
+    key:"manager", short:"管理職", name:"管理職(課長・マネージャー)",
+    salary:800, vacancy:4, recruitRate:35, rampMonths:6, rampGap:50, handover:40, attritionCount:2
+  },
+  {
+    key:"executive", short:"経営幹部", name:"経営幹部(部長・役員)",
+    salary:1200, vacancy:6, recruitRate:40, rampMonths:9, rampGap:50, handover:100, attritionCount:1
+  }
+];
+
+const FIELD_DEFS = [
+  {k:"salary", label:"年収", min:250, max:2500, step:10, unit:"万円"},
+  {k:"vacancy", label:"欠員期間(後任不在の月数)", min:0, max:12, step:1, unit:"ヶ月"},
+  {k:"recruitRate", label:"採用コスト率(対年収)", min:0, max:60, step:1, unit:"%"},
+  {k:"rampMonths", label:"立上り期間(フル戦力化までの月数)", min:0, max:18, step:1, unit:"ヶ月"},
+  {k:"rampGap", label:"立上り期間中の生産性未到達率", min:0, max:90, step:5, unit:"%"},
+  {k:"handover", label:"引継ぎ・周囲負荷コスト", min:0, max:300, step:5, unit:"万円"},
+  {k:"attritionCount", label:"直近5年以内の離職人数", min:0, max:50, step:1, unit:"人"},
+];
+
+let state = JSON.parse(JSON.stringify(LEVELS));
+let active = "junior";
+
+function calc(lv){
+  const monthly = lv.salary / 12;
+  const recruitCost = lv.salary * (lv.recruitRate/100);
+  const vacancyLoss = monthly * lv.vacancy;
+  const rampLoss = monthly * lv.rampMonths * (lv.rampGap/100);
+  const handoverCost = lv.handover;
+  const total = recruitCost + vacancyLoss + rampLoss + handoverCost;
+  return {recruitCost, vacancyLoss, rampLoss, handoverCost, total, monthly};
+}
+
+function renderTabs(){
+  const tabs = document.getElementById("tabs");
+  tabs.innerHTML = "";
+  state.forEach(lv=>{
+    const el = document.createElement("div");
+    el.className = "tab" + (lv.key===active ? " active":"");
+    el.innerHTML = `<div class="lv">LEVEL</div><div class="name">${lv.short}</div>`;
+    el.onclick = ()=>{ active = lv.key; renderAll(); };
+    tabs.appendChild(el);
+  });
+}
+
+function renderInputs(){
+  const lv = state.find(l=>l.key===active);
+  const box = document.getElementById("inputs");
+  box.innerHTML = `<h2><span class="dot"></span>${lv.name}</h2>`;
+  FIELD_DEFS.forEach(f=>{
+    const field = document.createElement("div");
+    field.className = "field";
+    field.innerHTML = `
+      <label><span>${f.label}</span><span class="val">${lv[f.k]}${f.unit}</span></label>
+      <input type="range" min="${f.min}" max="${f.max}" step="${f.step}" value="${lv[f.k]}">
+    `;
+    const range = field.querySelector("input");
+    range.oninput = (e)=>{
+      lv[f.k] = Number(e.target.value);
+      renderAll();
+    };
+    box.appendChild(field);
+  });
+  const hint = document.createElement("div");
+  hint.className = "hint";
+  hint.textContent = "スライダーを動かすと、右側の推定損失コストがリアルタイムで再計算されます。";
+  box.appendChild(hint);
+}
+
+function renderResult(){
+  const lv = state.find(l=>l.key===active);
+  const r = calc(lv);
+  document.getElementById("resultLabel").textContent = lv.name + " の推定損失コスト";
+  document.getElementById("totalVal").textContent = Math.round(r.total).toLocaleString();
+  const ratio = (r.total / lv.salary * 100).toFixed(0);
+  document.getElementById("ratioNote").textContent = `年収の約 ${ratio}% に相当`;
+
+  const cumulative = r.total * lv.attritionCount;
+  document.getElementById("cumulativeLabel").textContent =
+    `直近5年の累計損失(${lv.attritionCount}名分)`;
+  document.getElementById("cumulativeVal").textContent = Math.round(cumulative).toLocaleString();
+
+  const items = [
+    {label:"採用コスト", v:r.recruitCost, cls:"c1"},
+    {label:"欠員期間の逸失生産性", v:r.vacancyLoss, cls:"c2"},
+    {label:"立上り期間の生産性ロス", v:r.rampLoss, cls:"c3"},
+    {label:"引継ぎ・周囲負荷コスト", v:r.handoverCost, cls:"c4"},
+  ];
+  const max = Math.max(...items.map(i=>i.v), 1);
+  const bars = document.getElementById("bars");
+  bars.innerHTML = "";
+  items.forEach(i=>{
+    const row = document.createElement("div");
+    row.className = "bar-row";
+    row.innerHTML = `
+      <div class="lbl"><span>${i.label}</span><span>${Math.round(i.v).toLocaleString()}万円</span></div>
+      <div class="bar-track"><div class="bar-fill ${i.cls}" style="width:${(i.v/max*100).toFixed(1)}%"></div></div>
+    `;
+    bars.appendChild(row);
+  });
+}
+
+function renderCompare(){
+  const results = state.map(lv=>({lv, r:calc(lv), cum: calc(lv).total * lv.attritionCount}));
+  const max = Math.max(...results.map(x=>x.cum), 1);
+  const list = document.getElementById("compareList");
+  list.innerHTML = "";
+  results.forEach(({lv,cum})=>{
+    const row = document.createElement("div");
+    row.className = "clevel";
+    row.innerHTML = `
+      <div class="cname">${lv.short}(${lv.attritionCount}名)</div>
+      <div class="ctrack"><div class="cfill" style="width:${(cum/max*100).toFixed(1)}%"></div></div>
+      <div class="cval">${Math.round(cum).toLocaleString()}万円</div>
+    `;
+    list.appendChild(row);
+  });
+
+  const grandTotal = results.reduce((sum,x)=>sum+x.cum, 0);
+  document.getElementById("grandTotalVal").textContent =
+    Math.round(grandTotal).toLocaleString() + "万円";
+}
+
+function renderAll(){
+  renderTabs();
+  renderInputs();
+  renderResult();
+  renderCompare();
+}
+
+renderAll();
+</script>
+</body>
+</html>
