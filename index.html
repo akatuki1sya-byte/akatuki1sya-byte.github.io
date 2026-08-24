@@ -157,7 +157,7 @@
 
   footer{
     text-align:center; font-size:12px; color:var(--ink-soft); margin-top:60px;
-    letter-spacing:.05em;
+    letter-spacing:.05em; line-height:1.9;
   }
 
   @media(max-width:600px){
@@ -176,15 +176,15 @@
     <div class="eyebrow">Executive Self-Check · 暁月</div>
     <h1 class="title mincho">経営者マネジメント診断<br>― その理想は、いま経営の中で叶っているか ―</h1>
     <p class="lede">
-      10の問いに答えるだけで、あなたの経営スタイルが「孤独度」「負荷」「権限委譲」「心理的距離」「対話の質」の5軸でどう傾いているかを可視化します。
+      20の問いに答えるだけで、あなたの経営スタイルが「孤独度」「負荷」「権限委譲」「心理的距離」「対話の質」の5軸でどう傾いているかを可視化します。
     </p>
     <p class="lede">
       正しい答えはありません。今の実感に、正直に。
     </p>
     <div class="divider"></div>
     <div class="meta-row">
-      <span>所要時間　<b>約3分</b></span>
-      <span>設問数　<b>10問</b></span>
+      <span>所要時間　<b>約5〜7分</b></span>
+      <span>設問数　<b>20問</b></span>
       <span>費用　<b>無料</b></span>
     </div>
     <button class="start-btn" onclick="startQuiz()">診断をはじめる →</button>
@@ -193,7 +193,7 @@
   <section class="screen" id="screen-question">
     <div class="q-progress">
       <div class="q-progress-track"><div class="q-progress-fill" id="progressFill"></div></div>
-      <div class="q-progress-label" id="progressLabel">1 / 10</div>
+      <div class="q-progress-label" id="progressLabel">1 / 20</div>
     </div>
     <div class="q-axis" id="qAxis"></div>
     <div class="q-text" id="qText"></div>
@@ -239,7 +239,7 @@
     <button class="restart-btn" onclick="restartQuiz()">もう一度診断する</button>
   </section>
 
-  <footer>暁月 Akatsuki ― 国家資格キャリアコンサルタントによる社外CHRO支援</footer>
+  <footer>暁月 Akatsuki ― 国家資格キャリアコンサルタントによる社外CHRO支援<br>本診断は、CEOの孤独研究、仕事の要求度-資源モデル（JD-Rモデル）、状況対応型リーダーシップ理論（SL理論）、謙虚な問いかけ（シャイン）、傾聴・共感的理解（ロジャーズ）など組織心理学の知見をもとに設計されています。</footer>
 </div>
 
 <script>
@@ -254,14 +254,24 @@ const AXES = [
 const QUESTIONS = [
   { axis:'isolation', text:'重要な経営判断について、心から相談できる相手が社内にいないと感じる。' },
   { axis:'isolation', text:'自分の弱さや迷いを見せられる場所が、今の生活の中にほとんどない。' },
+  { axis:'isolation', text:'決断の結果を、誰かと分かち合える実感が乏しい。' },
+  { axis:'isolation', text:'経営者仲間や同業者との対話でも、本音を出しきれていないと感じる。' },
   { axis:'load',       text:'「自分がいないと現場が回らない」という感覚が常につきまとう。' },
   { axis:'load',       text:'休んでいる間も、仕事のことが頭から離れず気が休まらない。' },
+  { axis:'load',       text:'自分にしかできない仕事が、実際以上に多いと感じている。' },
+  { axis:'load',       text:'休暇を取ろうとすると、後ろめたさや不安を感じる。' },
   { axis:'delegation', text:'部下に任せるより、自分でやった方が早いと感じる場面が多い。' },
   { axis:'delegation', text:'重要な意思決定のほとんどを、最終的に自分一人で下している。' },
+  { axis:'delegation', text:'任せた仕事の結果が気になり、つい細かく確認してしまう。' },
+  { axis:'delegation', text:'「70点の出来」を許容できず、完璧な結果を求めてしまう。' },
   { axis:'distance',   text:'社員が自分にどう思われているか、正直に話してくれている自信がない。' },
   { axis:'distance',   text:'部下の本音や不満を、人づてに知ることがよくある。' },
+  { axis:'distance',   text:'社員との間に、立場によるある種の壁を感じることがある。' },
+  { axis:'distance',   text:'自分が話しかけると、場の空気が少し変わる気がする。' },
   { axis:'dialogue',   text:'1on1などの対話の時間が、業務連絡だけで終わってしまいがちだ。' },
-  { axis:'dialogue',   text:'社員と将来のビジョンについてじっくり語り合う機会が、ここ最近ない。' }
+  { axis:'dialogue',   text:'社員と将来のビジョンについてじっくり語り合う機会が、ここ最近ない。' },
+  { axis:'dialogue',   text:'部下の話を最後まで聞く前に、結論を急いでしまうことがある。' },
+  { axis:'dialogue',   text:'業務の進捗以外の話題で、社員と話す時間がほとんどない。' }
 ];
 
 const OPTIONS = [
@@ -380,7 +390,7 @@ function computeScores(){
     scores[q.axis] += answers[i] === null ? 0 : answers[i];
   });
   const pct = {};
-  AXES.forEach(a => pct[a.key] = Math.round(scores[a.key] / 6 * 100));
+  AXES.forEach(a => pct[a.key] = Math.round(scores[a.key] / 12 * 100));
   return pct;
 }
 
@@ -427,7 +437,7 @@ function renderRadar(pct){
   svg.innerHTML = '';
 
   [0.25, 0.5, 0.75, 1].forEach(f => {
-    const pts = AXES.map((a, i) => polarPoint(cx, cy, maxR*f, i, n)).join(' ');
+    const pts = AXES.map((a, i) => { const p = polarPoint(cx, cy, maxR*f, i, n); return p.x + ',' + p.y; }).join(' ');
     const poly = document.createElementNS(ns, 'polygon');
     poly.setAttribute('points', pts);
     poly.setAttribute('fill', 'none');
@@ -456,7 +466,7 @@ function renderRadar(pct){
     svg.appendChild(text);
   });
 
-  const dataPts = AXES.map((a, i) => polarPoint(cx, cy, maxR * (pct[a.key]/100), i, n)).join(' ');
+  const dataPts = AXES.map((a, i) => { const p = polarPoint(cx, cy, maxR * (pct[a.key]/100), i, n); return p.x + ',' + p.y; }).join(' ');
   const dataPoly = document.createElementNS(ns, 'polygon');
   dataPoly.setAttribute('points', dataPts);
   dataPoly.setAttribute('fill', 'rgba(63,110,104,0.28)');

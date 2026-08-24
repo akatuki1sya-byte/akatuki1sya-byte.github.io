@@ -190,13 +190,13 @@
       やがて部下の離職やチームの機能不全というかたちで表面化します。
     </p>
     <p class="lede">
-      全10問、約3分。あなたの会社の管理職が置かれている状況を5つの軸から診断し、
+      全20問、約5〜7分。あなたの会社の管理職が置かれている状況を5つの軸から診断し、
       現在の「型」と、そこに潜むリスク、次に取るべき一手を提示します。
     </p>
     <div class="divider"></div>
     <div class="meta-row">
-      <span><b>10問</b> の質問</span>
-      <span>所要時間 <b>約3分</b></span>
+      <span><b>20問</b> の質問</span>
+      <span>所要時間 <b>約5〜7分</b></span>
       <span>5つの軸 × <b>診断タイプ判定</b></span>
     </div>
     <button class="start-btn" onclick="startQuiz()">診断をはじめる →</button>
@@ -213,7 +213,7 @@
   <!-- ===== QUIZ ===== -->
   <section class="screen" id="screen-quiz">
     <div class="qhead">
-      <span class="qcount" id="qcount">Q1 / 10</span>
+      <span class="qcount" id="qcount">Q1 / 20</span>
       <span class="qaxis" id="qaxis">孤立度</span>
     </div>
     <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
@@ -261,6 +261,9 @@
       詳しく話を聞いてみたい場合は、担当者までお気軽にご相談ください。
       <br>
       <a class="cta-btn" href="https://forms.gle/Yr7xzcNVf9dCAuqC9" target="_blank" rel="noopener">組織の課題を相談してみる →</a>
+      <div style="margin-top:20px; font-size:12px; opacity:.75; line-height:1.9;">
+        本診断は、ボウルビィの愛着理論、仕事の要求度-資源モデル（JD-Rモデル）、状況対応型リーダーシップ理論（SL理論）、エドモンドソンの心理的安全性理論、ロジャーズの傾聴理論など組織心理学の知見をもとに設計されています。
+      </div>
     </div>
 
     <button class="retry-btn" onclick="restartQuiz()">もう一度診断する</button>
@@ -280,14 +283,24 @@ const AXES = [
 const QUESTIONS = [
   {axis:'isolation', text:'管理職同士が、本音で相談し合える機会がほとんどない。'},
   {axis:'isolation', text:'管理職が抱える悩みや失敗を、上司や社外の第三者に話せる場がない。'},
+  {axis:'isolation', text:'管理職の孤立を防ぐための制度やフォロー体制が、社内に整っていない。'},
+  {axis:'isolation', text:'管理職から「相談できる相手がいない」という声を聞くことがある。'},
   {axis:'overload',  text:'管理職はプレイヤー業務に追われ、マネジメントに割く時間がほとんど取れていない。'},
   {axis:'overload',  text:'管理職の残業や仕事の持ち帰りが常態化している。'},
+  {axis:'overload',  text:'管理職の業務量が、権限や評価に見合っていないと感じられる場面がある。'},
+  {axis:'overload',  text:'管理職が休みを取りづらい、または休んでも仕事が気になる状態が続いている。'},
   {axis:'delegation',text:'管理職は重要な判断のたびに、いちいち上位者の承認を仰がなければならない。'},
   {axis:'delegation',text:'部下に仕事を任せず、管理職がすべて自分で抱え込む傾向がある。'},
+  {axis:'delegation',text:'管理職に十分な裁量が与えられておらず、現場での判断が遅れがちだ。'},
+  {axis:'delegation',text:'管理職が部下に任せた仕事の結果を、過度に細かく確認してしまう傾向がある。'},
   {axis:'safety',    text:'部下が管理職に対して、反対意見や本音を言いにくい雰囲気がある。'},
   {axis:'safety',    text:'ミスや失敗が起きたとき、原因の究明より「誰の責任か」が優先される。'},
+  {axis:'safety',    text:'会議やミーティングで、若手や下位層からの発言が少ない。'},
+  {axis:'safety',    text:'「こんなことを聞いたら評価が下がるかも」という空気が、チーム内にある。'},
   {axis:'dialogue',  text:'1on1や面談が形骸化しており、業務進捗の確認だけで終わっている。'},
-  {axis:'dialogue',  text:'管理職は部下の話をじっくり聞くより、指示や説明が中心になりがちだ。'}
+  {axis:'dialogue',  text:'管理職は部下の話をじっくり聞くより、指示や説明が中心になりがちだ。'},
+  {axis:'dialogue',  text:'部下のキャリアや将来について、管理職と話す機会がほとんどない。'},
+  {axis:'dialogue',  text:'管理職からの声かけが、業務連絡以外ではほとんどないと感じる部下がいる。'}
 ];
 
 const OPTIONS = [
@@ -458,7 +471,7 @@ function computeScores(){
   });
   const pct = {};
   AXES.forEach(a=>{
-    pct[a.id] = Math.round((scores[a.id]/6)*100);
+    pct[a.id] = Math.round((scores[a.id]/12)*100);
   });
   return pct;
 }
