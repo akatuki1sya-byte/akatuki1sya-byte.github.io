@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>転機診断 | 暁月</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Noto+Serif+JP:wght@400;600&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FAF7F0;
+    --paper-deep:#F1ECE0;
+    --ink:#20263A;
+    --ink-soft:#565C70;
+    --gold:#B9863B;
+    --gold-deep:#8C6427;
+    --teal:#3F6E68;
+    --clay:#B3543E;
+    --line:#DCD4C0;
+    --white:#FFFFFF;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Noto Sans JP', sans-serif;
+    line-height:1.85;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:760px; margin:0 auto; padding:64px 28px 96px;}
+  .serif{font-family:'Noto Serif JP', serif;}
+  .mincho{font-family:'Shippori Mincho', serif;}
+
+  .screen{display:none;}
+  .screen.active{display:block; animation:fadeIn .5s ease both;}
+  @keyframes fadeIn{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);}}
+
+  .eyebrow{
+    font-size:12.5px; letter-spacing:.28em; color:var(--gold-deep);
+    text-transform:uppercase; margin-bottom:18px; font-weight:700;
+  }
+  h1.title{
+    font-size:32px; font-weight:700; letter-spacing:.02em; line-height:1.6;
+    margin-bottom:26px; color:var(--ink);
+  }
+  .lede{
+    font-size:15.5px; color:var(--ink-soft); max-width:56ch; margin-bottom:14px;
+  }
+  .divider{
+    width:44px; height:1px; background:var(--gold); margin:34px 0;
+  }
+  .meta-row{
+    display:flex; gap:28px; margin-bottom:38px; font-size:13px; color:var(--ink-soft);
+    flex-wrap:wrap;
+  }
+  .meta-row span b{color:var(--ink); font-weight:700;}
+  .start-btn{
+    appearance:none; border:none; cursor:pointer;
+    background:var(--ink); color:var(--paper);
+    font-family:'Noto Serif JP', serif;
+    font-size:15.5px; letter-spacing:.06em;
+    padding:16px 36px; border-radius:2px;
+    transition:background .25s ease, transform .2s ease;
+  }
+  .start-btn:hover{background:var(--gold-deep); transform:translateY(-1px);}
+
+  .q-progress{
+    display:flex; align-items:center; gap:14px; margin-bottom:44px;
+  }
+  .q-progress-track{
+    flex:1; height:2px; background:var(--line); position:relative;
+  }
+  .q-progress-fill{
+    position:absolute; top:0; left:0; height:2px; background:var(--gold);
+    transition:width .4s ease;
+  }
+  .q-progress-label{font-size:12px; color:var(--ink-soft); white-space:nowrap; letter-spacing:.08em;}
+  .q-axis{
+    font-size:12px; letter-spacing:.22em; color:var(--teal); text-transform:uppercase;
+    margin-bottom:20px; font-weight:700;
+  }
+  .q-text{
+    font-size:24px; line-height:1.75; margin-bottom:44px; color:var(--ink);
+    font-family:'Noto Serif JP', serif; font-weight:600;
+  }
+  .options{display:flex; flex-direction:column; gap:12px;}
+  .option-btn{
+    text-align:left; appearance:none; border:1px solid var(--line);
+    background:var(--white); cursor:pointer;
+    padding:18px 22px; border-radius:3px; font-size:15px; color:var(--ink);
+    font-family:'Noto Sans JP', sans-serif;
+    transition:border-color .2s ease, background .2s ease, transform .15s ease;
+    display:flex; align-items:center; gap:14px;
+  }
+  .option-btn:hover{border-color:var(--gold); background:var(--paper-deep); transform:translateX(3px);}
+  .option-num{
+    font-family:'Noto Serif JP', serif; font-size:13px; color:var(--gold-deep);
+    width:22px; height:22px; border:1px solid var(--gold); border-radius:50%;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .q-back{
+    margin-top:32px; background:none; border:none; cursor:pointer;
+    color:var(--ink-soft); font-size:13px; letter-spacing:.05em;
+    font-family:'Noto Sans JP', sans-serif;
+  }
+  .q-back:hover{color:var(--ink);}
+
+  .result-eyebrow{
+    font-size:12.5px; letter-spacing:.28em; color:var(--gold-deep);
+    text-transform:uppercase; margin-bottom:14px; font-weight:700;
+  }
+  .result-type{
+    font-family:'Shippori Mincho', serif; font-size:30px; font-weight:700;
+    line-height:1.6; margin-bottom:8px; color:var(--ink);
+  }
+  .result-sub{font-size:14px; color:var(--ink-soft); margin-bottom:36px;}
+  .radar-wrap{
+    background:var(--white); border:1px solid var(--line); border-radius:4px;
+    padding:32px 20px; margin-bottom:36px; display:flex; justify-content:center;
+  }
+  .block{
+    background:var(--white); border:1px solid var(--line); border-radius:4px;
+    padding:28px 26px; margin-bottom:20px;
+  }
+  .block h3{
+    font-family:'Noto Serif JP', serif; font-size:16px; margin-bottom:14px;
+    color:var(--ink); display:flex; align-items:center; gap:10px;
+  }
+  .block h3::before{content:''; width:6px; height:6px; background:var(--gold); border-radius:50%; flex-shrink:0;}
+  .block p{font-size:14.5px; color:var(--ink-soft);}
+  .axis-bars{display:flex; flex-direction:column; gap:14px; margin-top:6px;}
+  .axis-bar-row{display:flex; align-items:center; gap:14px; font-size:13.5px;}
+  .axis-bar-name{width:110px; flex-shrink:0; color:var(--ink-soft);}
+  .axis-bar-track{flex:1; height:8px; background:var(--paper-deep); border-radius:4px; overflow:hidden;}
+  .axis-bar-fill{height:100%; background:var(--teal); border-radius:4px; transition:width .8s ease;}
+  .axis-bar-pct{width:38px; text-align:right; color:var(--ink); font-weight:700;}
+
+  .cta-block{
+    margin-top:40px; padding:36px 30px; background:var(--ink); border-radius:4px;
+    color:var(--paper); text-align:left;
+  }
+  .cta-block .eyebrow{color:var(--gold);}
+  .cta-block p{color:#C9CBD8; font-size:14.5px; margin-bottom:22px; max-width:52ch;}
+  .cta-btn{
+    display:inline-block; appearance:none; border:1px solid var(--gold);
+    background:transparent; color:var(--paper); text-decoration:none;
+    font-family:'Noto Serif JP', serif; font-size:15px; letter-spacing:.05em;
+    padding:14px 30px; border-radius:2px; transition:background .25s ease;
+  }
+  .cta-btn:hover{background:var(--gold); color:var(--ink);}
+
+  .restart-btn{
+    margin-top:28px; background:none; border:none; cursor:pointer;
+    color:var(--ink-soft); font-size:13px; text-decoration:underline;
+  }
+
+  footer{
+    text-align:center; font-size:12px; color:var(--ink-soft); margin-top:60px;
+    letter-spacing:.05em; line-height:1.9;
+  }
+
+  @media(max-width:600px){
+    .wrap{padding:44px 20px 72px;}
+    h1.title{font-size:26px;}
+    .q-text{font-size:20px;}
+    .result-type{font-size:24px;}
+    .axis-bar-name{width:82px; font-size:12px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <section class="screen active" id="screen-intro">
+    <div class="eyebrow">Transition Self-Check · 暁月</div>
+    <h1 class="title mincho">転機診断<br>― その転機に、今どう向き合っているか ―</h1>
+    <p class="lede">
+      20の問いに答えるだけで、今のあなたが転機の中で「状況の受け止め」「自己理解」「周囲の支援」「行動戦略」「心理的余白」の5軸でどう傾いているかを可視化します。
+    </p>
+    <p class="lede">
+      正しい答えはありません。今の実感に、正直に。
+    </p>
+    <div class="divider"></div>
+    <div class="meta-row">
+      <span>所要時間　<b>約5〜7分</b></span>
+      <span>設問数　<b>20問</b></span>
+      <span>費用　<b>無料</b></span>
+    </div>
+    <button class="start-btn" onclick="startQuiz()">診断をはじめる →</button>
+  </section>
+
+  <section class="screen" id="screen-question">
+    <div class="q-progress">
+      <div class="q-progress-track"><div class="q-progress-fill" id="progressFill"></div></div>
+      <div class="q-progress-label" id="progressLabel">1 / 20</div>
+    </div>
+    <div class="q-axis" id="qAxis"></div>
+    <div class="q-text" id="qText"></div>
+    <div class="options" id="qOptions"></div>
+    <button class="q-back" id="qBack" onclick="prevQuestion()" style="display:none;">← 前の質問に戻る</button>
+  </section>
+
+  <section class="screen" id="screen-result">
+    <div class="result-eyebrow">Diagnosis Result</div>
+    <div class="result-type mincho" id="resultType"></div>
+    <div class="result-sub" id="resultSub"></div>
+
+    <div class="radar-wrap">
+      <svg id="radarChart" width="320" height="320" viewBox="0 0 320 320"></svg>
+    </div>
+
+    <div class="block">
+      <h3>傾向</h3>
+      <p id="resultTrait"></p>
+    </div>
+
+    <div class="block">
+      <h3>各軸のスコア</h3>
+      <div class="axis-bars" id="axisBars"></div>
+    </div>
+
+    <div class="block">
+      <h3>このタイプが抱えやすいリスク</h3>
+      <p id="resultRisk"></p>
+    </div>
+
+    <div class="block">
+      <h3>処方箋</h3>
+      <p id="resultRx"></p>
+    </div>
+
+    <div class="cta-block">
+      <div class="eyebrow">暁月 ― キャリア相談</div>
+      <p id="ctaText"></p>
+      <a class="cta-btn" href="https://forms.gle/KG2VHgZyhCcK1Qg57" target="_blank" rel="noopener">キャリア相談をはじめる →</a>
+    </div>
+
+    <button class="restart-btn" onclick="restartQuiz()">もう一度診断する</button>
+  </section>
+
+  <footer>暁月 Akatsuki ― 国家資格キャリアコンサルタントによるキャリア支援<br>本診断は、ナンシー・シュロスバーグの転機理論（4S：Situation・Self・Support・Strategies）をもとに設計されています。</footer>
+</div>
+
+<script>
+const AXES = [
+  { key:'situation',  label:'状況の受け止め' },
+  { key:'self',        label:'自己理解' },
+  { key:'support',     label:'周囲の支援' },
+  { key:'strategy',    label:'行動戦略' },
+  { key:'margin',      label:'心理的余白' }
+];
+
+const QUESTIONS = [
+  { axis:'situation', text:'今の自分に何が起きているのか、うまく言葉にできないと感じる。' },
+  { axis:'situation', text:'今の状況を、まだ現実として受け止めきれていない気がする。' },
+  { axis:'situation', text:'なぜ今、こんな状況になっているのか、まだ整理がついていない。' },
+  { axis:'situation', text:'この変化について、誰かに説明しようとしても、うまくまとまらない。' },
+  { axis:'self',       text:'自分が本当に大切にしたいことが、以前よりも分からなくなっている。' },
+  { axis:'self',       text:'自分の強みや得意なことを、自信を持って人に説明できない。' },
+  { axis:'self',       text:'これまでの自分の選択に、納得できていない部分がある。' },
+  { axis:'self',       text:'「本当はどうしたいのか」と聞かれると、答えに詰まってしまう。' },
+  { axis:'support',    text:'今の迷いを、誰かに率直に話せていないと感じる。' },
+  { axis:'support',    text:'相談できる相手はいるが、本音までは打ち明けられていない。' },
+  { axis:'support',    text:'周囲に心配をかけたくなくて、つい強がってしまうことがある。' },
+  { axis:'support',    text:'誰かに助けを求めることに、抵抗を感じる。' },
+  { axis:'strategy',   text:'次に何をすればいいのか、具体的な一歩が見えていない。' },
+  { axis:'strategy',   text:'「そのうち動こう」と思ったまま、時間だけが過ぎている。' },
+  { axis:'strategy',   text:'情報や選択肢は集めているが、実際の行動には移せていない。' },
+  { axis:'strategy',   text:'計画を立てても、途中で止まってしまうことが多い。' },
+  { axis:'margin',     text:'早く結論を出さなければと、常に焦りを感じている。' },
+  { axis:'margin',     text:'立ち止まってじっくり考える時間を、ここ最近取れていない。' },
+  { axis:'margin',     text:'気持ちに余裕がなく、些細なことでも不安になりやすい。' },
+  { axis:'margin',     text:'常に何かに追われているような感覚がある。' }
+];
+
+const OPTIONS = [
+  { label:'まったく当てはまらない', value:0 },
+  { label:'あまり当てはまらない',   value:1 },
+  { label:'やや当てはまる',         value:2 },
+  { label:'強く当てはまる',         value:3 }
+];
+
+const TYPES = {
+  situation: {
+    name:'霧の中型',
+    sub:'何が起きているのか、まだ言葉にできずにいる。',
+    trait:'あなたは今、大きな変化の渦中にいて、状況そのものをまだ十分に飲み込めていない段階にいるようです。霧の中にいる時、人はつい先を急ぎたくなりますが、まず必要なのは「今どこにいるか」を確かめることかもしれません。',
+    risk:'状況を十分に受け止めないまま次の行動に移ると、後になって「なぜあの時、あんな判断をしたのか」という後悔につながりやすくなります。焦って動く前の整理が、後の遠回りを防ぎます。',
+    rx:'まずは「今、自分に何が起きているか」を、誰かに話しながら言葉にしてみることをおすすめします。声に出すことで、霧の輪郭が少しずつはっきりしてきます。'
+  },
+  self: {
+    name:'輪郭のゆらぎ型',
+    sub:'自分の輪郭が、今はまだはっきり見えていない。',
+    trait:'これまで当たり前だと思っていた自分の価値観や強みが、今の転機の中で揺らいでいるようです。これは弱さではなく、変化に応じて自分を見つめ直している証でもあります。',
+    risk:'自己理解が曖昧なまま次のキャリアを選んでしまうと、環境だけが変わって同じ迷いを繰り返してしまうことがあります。',
+    rx:'これまでの経験の中で「充実していた瞬間」を丁寧に振り返ることが、輪郭を取り戻す近道です。一人で考えるより、対話の中で見えてくることが多くあります。'
+  },
+  support: {
+    name:'無人島型',
+    sub:'誰にも本音を預けられないまま、一人で立っている。',
+    trait:'あなたはこの転機を、ほとんど一人で抱えているようです。周囲に人がいないわけではなくても、本音までを預けられる場所が今は見当たらないのかもしれません。',
+    risk:'一人で抱え込んだ判断は、視野が狭くなりやすく、選択肢を見落としたまま結論を急いでしまうリスクがあります。',
+    rx:'完璧な答えを持つ相手でなくても構いません。まずは「話を聞いてくれる誰か」に、今の状況をそのまま話してみることから始めてみませんか。'
+  },
+  strategy: {
+    name:'足踏み型',
+    sub:'気持ちは動いているのに、足はまだ止まったまま。',
+    trait:'心の中では既に次に進みたいという気持ちがあるようです。それでも、具体的な一歩がまだ見えず、同じ場所で足踏みしている状態が続いているのかもしれません。',
+    risk:'行動に移せない期間が長引くと、焦りだけが積み重なり、いざ動き出す時により大きなエネルギーが必要になってしまいます。',
+    rx:'大きな決断でなくて構いません。「今週中にできる、一番小さな一歩」を一つだけ決めてみることが、足踏みを終わらせる最初のきっかけになります。'
+  },
+  margin: {
+    name:'駆け足型',
+    sub:'立ち止まる暇もなく、次へ次へと急いでいる。',
+    trait:'あなたは今、早く結論を出さなければという焦りの中にいるようです。真剣に向き合っているからこその焦りですが、余白のない状態では、本当に大切なことを見落としやすくなります。',
+    risk:'焦りの中で下した決断は、後になって「あの時もう少し考えていれば」という後悔を生みやすい傾向があります。',
+    rx:'あえて「何も決めない時間」を、意図的にスケジュールに入れてみてください。立ち止まることは、遠回りではなく、次の一歩を確かなものにするための準備です。'
+  },
+  balanced: {
+    name:'凪型',
+    sub:'今のところ、大きな偏りは見られません。',
+    trait:'現時点での回答からは、特定の軸に強い偏りは見られませんでした。状況の受け止め・自己理解・周囲の支援・行動戦略・心理的余白のバランスが、比較的取れている状態と言えます。',
+    risk:'バランスが取れている状態でも、転機が進むにつれて、これまで意識してこなかった軸が急に課題化することがあります。',
+    rx:'今の落ち着きを保ちながらも、状況が変化した際にはこの診断を振り返り、揺らぎの兆しに早めに気づける習慣を持っておくことをおすすめします。'
+  }
+};
+
+let current = 0;
+let answers = new Array(QUESTIONS.length).fill(null);
+
+function startQuiz(){
+  showScreen('screen-question');
+  renderQuestion();
+}
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function renderQuestion(){
+  const q = QUESTIONS[current];
+  const axisLabel = AXES.find(a => a.key === q.axis).label;
+  document.getElementById('qAxis').textContent = axisLabel;
+  document.getElementById('qText').textContent = q.text;
+  document.getElementById('progressLabel').textContent = (current+1) + ' / ' + QUESTIONS.length;
+  document.getElementById('progressFill').style.width = ((current)/QUESTIONS.length*100) + '%';
+  document.getElementById('qBack').style.display = current > 0 ? 'inline-block' : 'none';
+
+  const optWrap = document.getElementById('qOptions');
+  optWrap.innerHTML = '';
+  OPTIONS.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = '<span class="option-num">' + (i+1) + '</span><span>' + opt.label + '</span>';
+    btn.onclick = () => selectAnswer(opt.value);
+    optWrap.appendChild(btn);
+  });
+}
+
+function selectAnswer(value){
+  answers[current] = value;
+  if(current < QUESTIONS.length - 1){
+    current++;
+    renderQuestion();
+  } else {
+    showResult();
+  }
+}
+
+function prevQuestion(){
+  if(current > 0){
+    current--;
+    renderQuestion();
+  }
+}
+
+function restartQuiz(){
+  current = 0;
+  answers = new Array(QUESTIONS.length).fill(null);
+  showScreen('screen-intro');
+}
+
+function computeScores(){
+  const scores = {};
+  AXES.forEach(a => scores[a.key] = 0);
+  QUESTIONS.forEach((q, i) => {
+    scores[q.axis] += answers[i] === null ? 0 : answers[i];
+  });
+  const pct = {};
+  AXES.forEach(a => pct[a.key] = Math.round(scores[a.key] / 12 * 100));
+  return pct;
+}
+
+function showResult(){
+  const pct = computeScores();
+  let topAxis = null, topVal = -1;
+  AXES.forEach(a => { if(pct[a.key] > topVal){ topVal = pct[a.key]; topAxis = a.key; } });
+
+  const typeKey = topVal <= 33 ? 'balanced' : topAxis;
+  const type = TYPES[typeKey];
+
+  document.getElementById('resultType').textContent = type.name;
+  document.getElementById('resultSub').textContent = type.sub;
+  document.getElementById('resultTrait').textContent = type.trait;
+  document.getElementById('resultRisk').textContent = type.risk;
+  document.getElementById('resultRx').textContent = type.rx;
+  document.getElementById('ctaText').textContent =
+    '「' + type.name + '」の傾向にある方から、実際にご相談をいただくケースが多くあります。国家資格キャリアコンサルタントが、あなたの転機に伴走します。';
+
+  renderBars(pct);
+  renderRadar(pct);
+  showScreen('screen-result');
+}
+
+function renderBars(pct){
+  const wrap = document.getElementById('axisBars');
+  wrap.innerHTML = '';
+  AXES.forEach(a => {
+    const row = document.createElement('div');
+    row.className = 'axis-bar-row';
+    row.innerHTML =
+      '<div class="axis-bar-name">' + a.label + '</div>' +
+      '<div class="axis-bar-track"><div class="axis-bar-fill" style="width:' + pct[a.key] + '%"></div></div>' +
+      '<div class="axis-bar-pct">' + pct[a.key] + '%</div>';
+    wrap.appendChild(row);
+  });
+}
+
+function renderRadar(pct){
+  const svg = document.getElementById('radarChart');
+  const ns = 'http://www.w3.org/2000/svg';
+  const cx = 160, cy = 160, maxR = 110;
+  const n = AXES.length;
+  svg.innerHTML = '';
+
+  [0.25, 0.5, 0.75, 1].forEach(f => {
+    const pts = AXES.map((a, i) => { const p = polarPoint(cx, cy, maxR*f, i, n); return p.x + ',' + p.y; }).join(' ');
+    const poly = document.createElementNS(ns, 'polygon');
+    poly.setAttribute('points', pts);
+    poly.setAttribute('fill', 'none');
+    poly.setAttribute('stroke', '#B9AF95');
+    poly.setAttribute('stroke-width', '1');
+    svg.appendChild(poly);
+  });
+
+  AXES.forEach((a, i) => {
+    const p = polarPoint(cx, cy, maxR, i, n);
+    const line = document.createElementNS(ns, 'line');
+    line.setAttribute('x1', cx); line.setAttribute('y1', cy);
+    line.setAttribute('x2', p.x); line.setAttribute('y2', p.y);
+    line.setAttribute('stroke', '#B9AF95'); line.setAttribute('stroke-width', '1');
+    svg.appendChild(line);
+
+    const lp = polarPoint(cx, cy, maxR + 24, i, n);
+    const text = document.createElementNS(ns, 'text');
+    text.setAttribute('x', lp.x); text.setAttribute('y', lp.y);
+    text.setAttribute('text-anchor', 'middle');
+    text.setAttribute('dominant-baseline', 'middle');
+    text.setAttribute('font-size', '12');
+    text.setAttribute('font-family', 'Noto Sans JP, sans-serif');
+    text.setAttribute('fill', '#565C70');
+    text.textContent = a.label;
+    svg.appendChild(text);
+  });
+
+  const dataPts = AXES.map((a, i) => { const p = polarPoint(cx, cy, maxR * (pct[a.key]/100), i, n); return p.x + ',' + p.y; }).join(' ');
+  const dataPoly = document.createElementNS(ns, 'polygon');
+  dataPoly.setAttribute('points', dataPts);
+  dataPoly.setAttribute('fill', 'rgba(63,110,104,0.42)');
+  dataPoly.setAttribute('stroke', '#3F6E68');
+  dataPoly.setAttribute('stroke-width', '2');
+  svg.appendChild(dataPoly);
+
+  AXES.forEach((a, i) => {
+    const p = polarPoint(cx, cy, maxR * (pct[a.key]/100), i, n);
+    const dot = document.createElementNS(ns, 'circle');
+    dot.setAttribute('cx', p.x); dot.setAttribute('cy', p.y); dot.setAttribute('r', '3.5');
+    dot.setAttribute('fill', '#3F6E68');
+    svg.appendChild(dot);
+  });
+}
+
+function polarPoint(cx, cy, r, i, n){
+  const angle = (Math.PI * 2 * i / n) - Math.PI/2;
+  return { x: cx + r * Math.cos(angle), y: cy + r * Math.sin(angle) };
+}
+</script>
+</body>
+</html>
