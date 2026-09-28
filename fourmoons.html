@@ -166,7 +166,7 @@ function code(name){return (name||"名前なし").replace(/[\/|\n]/g," ")+"/"+se
 function showCards(){
   byId("pick").classList.add("hidden");
   var name=byId("uname").value.trim(), cd=code(name);
-  var h='<div class="en">Your Fifteen Cards</div><h1>'+(name?esc(name)+"さんが":"あなたが")+'選んだ15枚</h1><p class="lead">過去・現在・未来のそれぞれに選んだカードです。並べて眺めてみて、気づいたことや心に残るカードがあれば、メモしておいてください。</p>';
+  var h='<div class="en">Your Fifteen Cards</div><h1>'+(name?esc(name)+"さんが":"あなたが")+'選んだ15枚</h1><p class="lead">過去・現在・未来のそれぞれに選んだカードです。並べて眺めてみて、気づいたことや心に残るカードがあれば、メモしておいてください。</p><p class="note">カードの色や数字、月の形にはそれぞれ意味があります。その意味は、研修の最後にお伝えします。</p>';
   sel.forEach(function(ids,i){h+='<hr><div class="sechead"><span class="roman">'+["I","II","III"][i]+'</span><h2>'+PERIODS[i].nm+'</h2></div><div class="pcrow" style="margin-top:12px">'+ids.map(function(id){return pcard(card(id));}).join("")+'</div>';});
   h+='<hr><div class="sechead"><span class="roman">IV</span><h2>講師に送るコード</h2></div><p class="lead">下のコードをコピーして、講師に送ってください。</p><div class="codebox" id="code">'+esc(cd)+'</div>';
   h+='<div class="actions"><button class="primary" id="ccode">コードをコピー</button><button class="ghost" onclick="window.print()">カードを印刷する</button></div><div id="copied" class="note"></div>';
