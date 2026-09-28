@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>四つの月 ── 光と影のカード</title>
+<style>
+:root{--mid:#1B2340;--gold:#B8860B;--ink:#1B1B1B;--gray:#6E6E6E;--line:#D9D6CF;--lit:#F4ECD6;
+--AK:#1E6B52;--HI:#B7322C;--YU:#D9A21B;--YO:#1F2F4A;--AKt:#1E6B52;--HIt:#9A2A25;--YUt:#7E5C0A;--YOt:#1F2F4A}
+*{box-sizing:border-box}
+body{margin:0;background:#fff;color:var(--ink);font-family:"Meiryo UI",Meiryo,"Hiragino Sans","Noto Sans JP",sans-serif;line-height:1.7}
+.wrap{max-width:1040px;margin:0 auto;padding:40px 20px 80px}
+.en{font-family:Cambria,Georgia,serif;font-style:italic;color:var(--gold);font-size:14px}
+h1{font-size:26px;color:var(--mid);margin:4px 0 8px;letter-spacing:.06em}
+h2{font-size:20px;color:var(--mid);margin:4px 0 6px;letter-spacing:.04em}
+h3{font-size:16px;color:var(--mid);margin:28px 0 8px}
+.lead{color:var(--ink);max-width:640px}
+.note{color:var(--gray);font-size:13px}
+hr{border:0;border-top:1px solid var(--line);margin:28px 0}
+.sechead{display:flex;gap:16px;align-items:baseline}
+.roman{font-family:Cambria,Georgia,serif;font-style:italic;color:var(--gold);font-size:22px;min-width:28px}
+button{font-family:inherit;font-size:15px;cursor:pointer;border-radius:4px;padding:12px 28px;min-height:44px}
+.primary{background:var(--mid);color:#fff;border:1px solid var(--mid)}
+.primary:disabled{background:#C9CCD6;border-color:#C9CCD6;cursor:not-allowed}
+.ghost{background:#fff;color:var(--mid);border:1px solid var(--mid)}
+button:focus-visible,.card:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.bar{position:sticky;top:0;background:rgba(255,255,255,.96);border-bottom:1px solid var(--line);z-index:5;padding:12px 0;margin-bottom:20px}
+.barin{max-width:1040px;margin:0 auto;padding:0 20px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.count{font-family:Cambria,Georgia,serif;font-size:22px;color:var(--mid)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}
+.card{background:#fff;border:1px solid var(--line);border-radius:6px;padding:18px 16px;text-align:left;font-family:inherit;color:var(--ink);cursor:pointer;display:flex;flex-direction:column;gap:6px;min-height:130px;position:relative}
+.card:hover{border-color:var(--mid)}
+.card .w{font-weight:700;color:var(--mid);font-size:16px}
+.card .t{font-size:13px;line-height:1.7}
+.card[aria-pressed="true"]{border:2px solid var(--gold);background:#FBF7EC;padding:17px 15px}
+.card[aria-pressed="true"]::after{content:"選択中";position:absolute;top:8px;right:10px;font-size:11px;color:var(--gold)}
+.steps{display:flex;gap:24px;margin:8px 0 0;font-size:13px;color:var(--gray)}
+.steps .on{color:var(--mid);font-weight:700}
+.rcard{display:flex;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:#fff}
+.rcard .band{width:8px;flex:none}
+.rcard .body{padding:10px 14px;display:flex;gap:12px;align-items:center;flex:1}
+.rcard .num{font-family:Cambria,Georgia,serif;font-style:italic;font-size:22px;color:var(--mid);min-width:26px;text-align:right}
+.rcard .w{font-weight:700;font-size:14px}
+.rcard .meta{font-size:11px;color:var(--gray)}
+.rlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px}
+.period{margin-top:18px}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+@media (max-width:720px){.stats{grid-template-columns:1fr}}
+.stat{border-top:1px solid var(--line);padding-top:12px}
+.stat .lab{font-size:13px;color:var(--gray)}
+.stat .big{font-family:Cambria,Georgia,serif;font-size:32px;color:var(--mid);line-height:1.2}
+.comp{display:flex;height:10px;border-radius:2px;overflow:hidden;margin:8px 0 6px;background:#eee}
+.legend{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:12px}
+.legend span::before{content:"";display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;background:var(--c)}
+.reading p{margin:0 0 12px;max-width:760px}
+.reading b{color:var(--mid)}
+.chart{width:100%;max-width:560px}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}
+.styles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+@media (max-width:720px){.styles{grid-template-columns:1fr}}
+.sbox{border-top:3px solid var(--c);padding-top:10px}
+.sbox .nm{font-weight:700;color:var(--mid)}
+.sbox .d{font-size:13px}
+footer{margin-top:48px;font-size:12px;color:var(--gray);text-align:center}
+.hidden{display:none}
+@media print{.bar,.actions,button{display:none!important}.wrap{padding:0}}
+.pcrow{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+@media (max-width:900px){.pcrow{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:560px){.pcrow{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.pc{aspect-ratio:63/88;background:#fff;border:1px solid var(--line);border-radius:8px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 1px 0 rgba(0,0,0,.04)}
+.pc .band{display:flex;justify-content:space-between;align-items:center;padding:8% 9% 6%;gap:6px}
+.pc .band .nm{font-weight:700;letter-spacing:.12em;font-size:clamp(12px,1.5vw,15px);line-height:1.2}
+.pc .band .en2{font-family:Cambria,Georgia,serif;font-style:italic;font-size:10px;opacity:.85}
+.pc .band .no{font-family:Cambria,Georgia,serif;font-style:italic;font-size:clamp(18px,2.2vw,24px);line-height:1;text-align:right}
+.pc .band .mn{font-size:9px;text-align:right;opacity:.9}
+.pc .band svg{width:clamp(22px,3vw,34px);height:auto;flex:none}
+.pc .bd{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:4% 8% 8%;text-align:center}
+.pc .hw{font-weight:700;font-size:clamp(12px,1.4vw,15px);line-height:1.4;word-break:auto-phrase}
+.pc .sc{font-size:clamp(10px,1.1vw,12px);line-height:1.6;word-break:auto-phrase}
+.pc .bd svg{width:34%;height:auto}
+.codebox{font-family:Cambria,Georgia,monospace;background:#F7F5F0;padding:12px;border-radius:4px;word-break:break-all;font-size:13px}
+</style>
+</head>
+<body>
+<div id="intro" class="wrap">
+  <div class="en">Four Moons ── Cards of Light and Shadow</div>
+  <h1>四つの月　光と影のカード</h1>
+  <p class="lead">これから、あなたの過去・現在・未来について、それぞれ5枚ずつカードを選んでいただきます。カードには、職場でよくある場面が一つずつ書かれています。</p>
+  <hr>
+  <div class="sechead"><span class="roman">I</span><h3 style="margin:0">選び方</h3></div>
+  <p class="lead">正しい答えはありません。よく見せようとせず、「たしかに、自分はこうしている（こうしていた）」と感じるものを選んでください。</p>
+  <p class="lead">見出しの言葉よりも、下に書かれた場面を読んで選ぶのがおすすめです。同じカードを、別の時期にもう一度選んでもかまいません。</p>
+  <div class="sechead"><span class="roman">II</span><h3 style="margin:0">所要時間</h3></div>
+  <p class="lead">およそ10〜15分です。選び終えると、あなたが選んだ15枚のカードが並びます。</p>
+  <div class="sechead"><span class="roman">III</span><h3 style="margin:0">お名前</h3></div>
+  <p class="lead"><label for="uname">お名前（またはニックネーム）を入れてください。</label><br><input id="uname" type="text" autocomplete="off" style="font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:4px;width:280px;max-width:100%;margin-top:8px"></p>
+  <div class="actions"><button class="primary" id="start">はじめる</button></div>
+</div>
+
+<div id="pick" class="hidden">
+  <div class="bar"><div class="barin">
+    <div>
+      <div class="steps"><span data-s="0">I　過去</span><span data-s="1">II　現在</span><span data-s="2">III　未来</span></div>
+      <div id="ptitle" style="font-weight:700;color:var(--mid);font-size:17px"></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:16px">
+      <span class="count"><span id="cnt">0</span> / 5</span>
+      <button class="ghost hidden" id="same">過去と同じ</button><button class="ghost" id="back">戻る</button>
+      <button class="primary" id="next" disabled>次へ</button>
+    </div>
+  </div></div>
+  <div class="wrap" style="padding-top:0">
+    <p class="lead" id="pdesc"></p>
+    <div class="grid" id="grid"></div>
+  </div>
+</div>
+
+<div id="result" class="wrap hidden"></div>
+
+<script>
+var CARDS = [{"id": "AK-01", "s": "AK", "n": 1, "w": "ひとりで決めてしまう", "t": "相談のつもりで集めた会議で、もう結論を話している。"}, {"id": "AK-02", "s": "AK", "n": 2, "w": "言葉が刃になる", "t": "正論を言ったあとで、相手が黙り込んでいることに気づく。"}, {"id": "AK-03", "s": "AK", "n": 3, "w": "結果しか見えなくなる", "t": "目標を達成した日に、誰がどれだけ無理をしたかに気づいていない。"}, {"id": "AK-04", "s": "AK", "n": 4, "w": "待つことができない", "t": "相手の返事が遅いと、催促の連絡を重ねてしまう。"}, {"id": "AK-05", "s": "AK", "n": 5, "w": "抱え込んで任せない", "t": "任せた仕事を途中で引き取り、自分で仕上げてしまう。"}, {"id": "AK-06", "s": "AK", "n": 6, "w": "勝ち負けにこだわる", "t": "雑談の小さな議論でも、つい言い負かそうとしてしまう。"}, {"id": "AK-07", "s": "AK", "n": 7, "w": "前に出る", "t": "気づけば、話し合いの進行役になっている。"}, {"id": "AK-08", "s": "AK", "n": 8, "w": "困難に挑む", "t": "「それは無理だろう」と言われると、かえって燃えてくる。"}, {"id": "AK-09", "s": "AK", "n": 9, "w": "自ら引き受ける", "t": "担当が決まらない仕事に、「私がやります」と手を挙げる。"}, {"id": "AK-10", "s": "AK", "n": 10, "w": "誰より先に動き出す", "t": "方針が決まると、資料がそろう前に電話をかけ始めている。"}, {"id": "AK-11", "s": "AK", "n": 11, "w": "高い旗を掲げる", "t": "「どうせなら一番を目指そう」と、目標を一段上げてみせる。"}, {"id": "AK-12", "s": "AK", "n": 12, "w": "まっすぐに伝える", "t": "言いにくい指摘も、前置きをせずに本人に伝えられる。"}, {"id": "AK-13", "s": "AK", "n": 13, "w": "迷いを断ち、決めきる", "t": "会議が堂々巡りになると、「ではこうしましょう」と口にしている。"}, {"id": "HI-01", "s": "HI", "n": 1, "w": "熱が空回りする", "t": "熱く語り終えたあとで、周りの反応が薄いことに気づく。"}, {"id": "HI-02", "s": "HI", "n": 2, "w": "その場の気分で話す", "t": "盛り上がって口にした約束を、翌日には忘れている。"}, {"id": "HI-03", "s": "HI", "n": 3, "w": "楽観が過ぎる", "t": "「なんとかなるよ」と言ったまま、準備が間に合わなくなる。"}, {"id": "HI-04", "s": "HI", "n": 4, "w": "注目を集めたくなる", "t": "話題が自分から離れると、つい話を引き寄せてしまう。"}, {"id": "HI-05", "s": "HI", "n": 5, "w": "広く浅くなる", "t": "知り合いは多いのに、悩みを打ち明けられる相手が思い浮かばない。"}, {"id": "HI-06", "s": "HI", "n": 6, "w": "仕上げる前に次へ移る", "t": "机の上に、途中で止まった企画がいくつも残っている。"}, {"id": "HI-07", "s": "HI", "n": 7, "w": "輪の中にいる", "t": "休憩時間には、いつのまにか人の輪の中で話している。"}, {"id": "HI-08", "s": "HI", "n": 8, "w": "新しいことに心が躍る", "t": "新しい道具やサービスを、真っ先に試してみる。"}, {"id": "HI-09", "s": "HI", "n": 9, "w": "すぐに打ち解ける", "t": "初めて会った人とも、帰るころには連絡先を交換している。"}, {"id": "HI-10", "s": "HI", "n": 10, "w": "場の空気を変える", "t": "会議が重くなると、冗談ひとつで笑いを起こせる。"}, {"id": "HI-11", "s": "HI", "n": 11, "w": "未来を明るく描く", "t": "新しい企画の話になると、完成したあとの楽しい場面から語り出す。"}, {"id": "HI-12", "s": "HI", "n": 12, "w": "気持ちを言葉にして届ける", "t": "「ありがとう」「うれしい」を、その場ですぐ口にする。"}, {"id": "HI-13", "s": "HI", "n": 13, "w": "人の心に火を灯す", "t": "自分が語った夢に、周りが「やってみたい」と乗ってくる。"}, {"id": "YU-01", "s": "YU", "n": 1, "w": "自分を後回しにしすぎる", "t": "「あなたはどうしたいの」と聞かれて、答えに詰まる。"}, {"id": "YU-02", "s": "YU", "n": 2, "w": "言いたいことを飲み込む", "t": "帰り道に、「本当はあのとき言えばよかった」と思い返す。"}, {"id": "YU-03", "s": "YU", "n": 3, "w": "対立を避けすぎる", "t": "もめそうな議題を、「また今度」と先送りしてしまう。"}, {"id": "YU-04", "s": "YU", "n": 4, "w": "頼まれると断れない", "t": "手いっぱいなのに、「いいですよ」と引き受けてしまう。"}, {"id": "YU-05", "s": "YU", "n": 5, "w": "変化に身構える", "t": "「やり方を変えます」と聞くと、まず不安が先に立つ。"}, {"id": "YU-06", "s": "YU", "n": 6, "w": "気をつかいすぎて疲れる", "t": "楽しかったはずの飲み会のあと、ぐったりしている。"}, {"id": "YU-07", "s": "YU", "n": 7, "w": "そばにいる", "t": "困っている人がいると、気づけば隣の席に移っている。"}, {"id": "YU-08", "s": "YU", "n": 8, "w": "小さな変化に気づく", "t": "同僚の声の調子から、「今日は疲れているな」と察する。"}, {"id": "YU-09", "s": "YU", "n": 9, "w": "こつこつ続ける", "t": "毎日の記録や点検を、何年でも同じ丁寧さで続けられる。"}, {"id": "YU-10", "s": "YU", "n": 10, "w": "陰で支える", "t": "会議室の片づけや備品の補充を、誰に言われなくてもやっている。"}, {"id": "YU-11", "s": "YU", "n": 11, "w": "場の和を守る", "t": "意見がぶつかると、双方の言い分をやわらかく言い直して間に入る。"}, {"id": "YU-12", "s": "YU", "n": 12, "w": "最後まで聴く", "t": "相手の話が長くなっても、口を挟まずに最後まで待てる。"}, {"id": "YU-13", "s": "YU", "n": 13, "w": "痛みに寄り添う", "t": "つらい話を打ち明けられたとき、励ますより先に、ただ一緒にいられる。"}, {"id": "YO-01", "s": "YO", "n": 1, "w": "粗ばかりが目につく", "t": "人の資料を見ると、よい点より先に誤りが目に入る。"}, {"id": "YO-02", "s": "YO", "n": 2, "w": "慎重すぎて動けない", "t": "調べるほど不安が増えて、始めるのが遅れてしまう。"}, {"id": "YO-03", "s": "YO", "n": 3, "w": "計画どおりにこだわる", "t": "急な予定変更を告げられると、しばらく次の手が考えられない。"}, {"id": "YO-04", "s": "YO", "n": 4, "w": "完璧を求めすぎる", "t": "八割できた資料を、締め切り直前まで手直ししている。"}, {"id": "YO-05", "s": "YO", "n": 5, "w": "冷たく見られる", "t": "事実だけを伝えたつもりが、「冷たい」と言われたことがある。"}, {"id": "YO-06", "s": "YO", "n": 6, "w": "内にこもる", "t": "考えがまとまるまで、周りに何も伝えずに作業を進めてしまう。"}, {"id": "YO-07", "s": "YO", "n": 7, "w": "一歩引いて観る", "t": "会議では、発言する前にしばらく全体の流れを見ている。"}, {"id": "YO-08", "s": "YO", "n": 8, "w": "ひとりで深く考える", "t": "大事な判断は、一晩ひとりで考えてから答えたい。"}, {"id": "YO-09", "s": "YO", "n": 9, "w": "感情に流されない", "t": "周りが慌てているときほど、声が落ち着いている。"}, {"id": "YO-10", "s": "YO", "n": 10, "w": "細部まで仕上げる", "t": "提出の前に、誤字や数字のずれをもう一度確かめている。"}, {"id": "YO-11", "s": "YO", "n": 11, "w": "筋道を立てる", "t": "仕事を受けると、まず手順を書き出してから始める。"}, {"id": "YO-12", "s": "YO", "n": 12, "w": "根拠を確かめる", "t": "判断する前に、元の資料や数字に自分であたっている。"}, {"id": "YO-13", "s": "YO", "n": 13, "w": "本質を見抜く", "t": "みんなが目の前の問題を話しているとき、「そもそもの原因は」と別の点を指摘する。"}];
+var ICON = {"AK": "<svg width=\"40\" height=\"40\" viewBox=\"0 0 60 60\" style=\"flex:none\"><path fill=\"#ffffff\" d=\"M30,2 L44,20 L37,20 L50,36 L41,36 L54,50 L6,50 L19,36 L10,36 L23,20 L16,20 Z\"/><rect x=\"26\" y=\"50\" width=\"8\" height=\"8\" fill=\"#ffffff\"/></svg>", "HI": "<svg width=\"40\" height=\"40\" viewBox=\"0 0 60 60\" style=\"flex:none\"><path fill=\"#ffffff\" d=\"M30,3 C33,13 44,20 47,32 C50,45 41,57 30,57 C19,57 10,48 12,36 C13,28 18,24 20,17 C23,23 25,27 27,29 C29,20 28,11 30,3 Z\"/><path fill=\"#B7322C\" d=\"M30,30 C33,36 39,40 39,47 C39,53 35,57 30,57 C25,57 21,53 21,47 C21,42 25,39 26,34 C27,37 28,39 29,40 C30,37 30,33 30,30 Z\"/></svg>", "YU": "<svg width=\"40\" height=\"40\" viewBox=\"0 0 60 60\" style=\"flex:none\"><path fill=\"#1B2340\" d=\"M2,48 L20,18 L28,30 L38,12 L58,48 Z\"/><path fill=\"#D9A21B\" d=\"M38,12 L44,23 L40,21 L36,25 L33,21 Z\"/><rect x=\"2\" y=\"51\" width=\"56\" height=\"3\" fill=\"#1B2340\"/><rect x=\"10\" y=\"56\" width=\"40\" height=\"2.5\" fill=\"#1B2340\"/></svg>", "YO": "<svg width=\"40\" height=\"40\" viewBox=\"0 0 60 60\" style=\"flex:none\"><path fill=\"#ffffff\" d=\"M30,3 C36,15 48,28 48,40 A18,18 0 0 1 12,40 C12,28 24,15 30,3 Z\"/><path fill=\"none\" stroke=\"#1F2F4A\" stroke-width=\"3\" stroke-linecap=\"round\" d=\"M20,41 A10,10 0 0 0 28,50\"/></svg>"};
+var ST={AK:{nm:"暁月",en:"Dawn Moon",c:"#1E6B52",fg:"#ffffff",t:"#1E6B52"},HI:{nm:"昼月",en:"Day Moon",c:"#B7322C",fg:"#ffffff",t:"#9A2A25"},
+YU:{nm:"夕月",en:"Evening Moon",c:"#D9A21B",fg:"#1B2340",t:"#7E5C0A"},YO:{nm:"夜月",en:"Night Moon",c:"#1F2F4A",fg:"#ffffff",t:"#1F2F4A"}};
+var MOON={1:"朔",2:"二日月",3:"三日月",4:"四日月",5:"五日月",6:"六日月",7:"上弦",8:"八日月",9:"九日月",10:"十日月",11:"十一日月",12:"十二日月",13:"十三夜"};
+var PERIODS=[
+ {nm:"過去",title:"過去のあなた",desc:"数年前の自分を思い出してください。そのころのあなたに当てはまるカードを5枚選びます。"},
+ {nm:"現在",title:"今のあなた",desc:"今の職場や暮らしの中のあなたに当てはまるカードを5枚選びます。"},
+ {nm:"未来",title:"これからのあなた",desc:"これから、こうありたいと思うあなたに近いカードを5枚選びます。"}];
+var step=0, sel=[[],[],[]];
+function byId(id){return document.getElementById(id);}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var x=a[i];a[i]=a[j];a[j]=x;}return a;}
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");}
+function card(id){for(var i=0;i<CARDS.length;i++){if(CARDS[i].id===id)return CARDS[i];}}
+function renderPick(){
+  var P=PERIODS[step];
+  byId("ptitle").textContent=P.title+"　── 5枚を選んでください";
+  byId("pdesc").textContent=P.desc;
+  var sp=document.querySelectorAll(".steps span");
+  for(var i=0;i<sp.length;i++){sp[i].className=(i===step?"on":"");}
+  var g=byId("grid"); g.innerHTML="";
+  shuffle(CARDS).forEach(function(c){
+    var b=document.createElement("button"); b.className="card"; b.type="button";
+    b.setAttribute("aria-pressed", sel[step].indexOf(c.id)>=0?"true":"false");
+    b.innerHTML='<span class="w">'+esc(c.w)+'</span><span class="t">'+esc(c.t)+'</span>';
+    b.onclick=function(){toggle(c.id,b);}; g.appendChild(b);
+  });
+  byId("same").classList.toggle("hidden", step!==1);
+  update(); window.scrollTo(0,0);
+}
+function toggle(id,b){var s=sel[step], i=s.indexOf(id);
+  if(i>=0){s.splice(i,1);b.setAttribute("aria-pressed","false");} else { if(s.length>=5)return; s.push(id);b.setAttribute("aria-pressed","true");}
+  update();}
+function update(){byId("cnt").textContent=sel[step].length; byId("next").disabled=sel[step].length!==5; byId("next").textContent= step===2?"選び終える":"次へ";}
+byId("start").onclick=function(){byId("intro").classList.add("hidden");byId("pick").classList.remove("hidden");step=0;renderPick();};
+byId("same").onclick=function(){ sel[1]=sel[0].slice(); renderPick(); };
+byId("back").onclick=function(){ if(step===0){byId("pick").classList.add("hidden");byId("intro").classList.remove("hidden");} else {step--;renderPick();} };
+byId("next").onclick=function(){ if(step<2){step++;renderPick();} else {showCards();} };
+function moonSvg(n,ring){var size=80,r=34,cx=40, th=n<=7?(n-1)*(Math.PI/2)/6:Math.PI/2+(n-7)*(0.32*Math.PI)/6;
+  var c=Math.cos(th), rx=Math.abs(c)*r, lit="";
+  if(n>1){var d = n===7 ? "M40,6 A34,34 0 0 1 40,74 Z" : "M40,6 A34,34 0 0 1 40,74 A"+rx.toFixed(2)+",34 0 0 "+(c>0?0:1)+" 40,6 Z"; lit='<path d="'+d+'" fill="#F4ECD6"/>';}
+  return '<svg viewBox="0 0 80 80" aria-hidden="true"><circle cx="40" cy="40" r="34" fill="#1B2340"/>'+lit+'<circle cx="40" cy="40" r="34" fill="none" stroke="'+ring+'" stroke-width="1"/></svg>';}
+function pcard(c){var S=ST[c.s];
+  return '<div class="pc"><div class="band" style="background:'+S.c+';color:'+S.fg+'"><div style="display:flex;align-items:center;gap:6px">'+ICON[c.s]+'<div><div class="nm">'+S.nm+'</div><div class="en2">'+S.en+'</div></div></div><div><div class="no">'+c.n+'</div><div class="mn">'+MOON[c.n]+'</div></div></div>'+
+  '<div class="bd"><div class="hw" style="color:'+S.t+'">'+esc(c.w)+'</div>'+moonSvg(c.n,S.c)+'<div class="sc">'+esc(c.t)+'</div></div></div>';}
+function code(name){return (name||"名前なし").replace(/[\/|\n]/g," ")+"/"+sel.map(function(a){return a.map(function(x){return x.replace("-","");}).join(",");}).join("/");}
+function showCards(){
+  byId("pick").classList.add("hidden");
+  var name=byId("uname").value.trim(), cd=code(name);
+  var h='<div class="en">Your Fifteen Cards</div><h1>'+(name?esc(name)+"さんが":"あなたが")+'選んだ15枚</h1><p class="lead">過去・現在・未来のそれぞれに選んだカードです。並べて眺めてみて、気づいたことや心に残るカードがあれば、メモしておいてください。</p>';
+  sel.forEach(function(ids,i){h+='<hr><div class="sechead"><span class="roman">'+["I","II","III"][i]+'</span><h2>'+PERIODS[i].nm+'</h2></div><div class="pcrow" style="margin-top:12px">'+ids.map(function(id){return pcard(card(id));}).join("")+'</div>';});
+  h+='<hr><div class="sechead"><span class="roman">IV</span><h2>講師に送るコード</h2></div><p class="lead">下のコードをコピーして、講師に送ってください。</p><div class="codebox" id="code">'+esc(cd)+'</div>';
+  h+='<div class="actions"><button class="primary" id="ccode">コードをコピー</button><button class="ghost" onclick="window.print()">カードを印刷する</button></div><div id="copied" class="note"></div>';
+  h+='<footer>一般社団法人暁月　組織に、哲学を。心に、豊かさを。</footer>';
+  var E=byId("result");E.innerHTML=h;E.classList.remove("hidden");window.scrollTo(0,0);
+  byId("ccode").onclick=function(){var t=cd,done=function(){byId("copied").textContent="コピーしました。";};
+    if(navigator.clipboard){navigator.clipboard.writeText(t).then(done,function(){fb(t);done();});}else{fb(t);done();}};
+}
+function fb(t){var a=document.createElement("textarea");a.value=t;document.body.appendChild(a);a.select();try{document.execCommand("copy");}catch(e){}document.body.removeChild(a);}
+</script>
+</body>
+</html>
