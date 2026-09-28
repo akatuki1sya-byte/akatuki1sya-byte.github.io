@@ -64,20 +64,19 @@ button:focus-visible,.card:focus-visible{outline:2px solid var(--gold);outline-o
 footer{margin-top:48px;font-size:12px;color:var(--gray);text-align:center}
 .hidden{display:none}
 @media print{.bar,.actions,button{display:none!important}.wrap{padding:0}}
-.pcrow{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
-@media (max-width:900px){.pcrow{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media (max-width:560px){.pcrow{grid-template-columns:repeat(2,minmax(0,1fr))}}
-.pc{aspect-ratio:63/88;background:#fff;border:1px solid var(--line);border-radius:8px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 1px 0 rgba(0,0,0,.04)}
-.pc .band{display:flex;justify-content:space-between;align-items:center;padding:8% 9% 6%;gap:6px}
-.pc .band .nm{font-weight:700;letter-spacing:.12em;font-size:clamp(12px,1.5vw,15px);line-height:1.2}
-.pc .band .en2{font-family:Cambria,Georgia,serif;font-style:italic;font-size:10px;opacity:.85}
-.pc .band .no{font-family:Cambria,Georgia,serif;font-style:italic;font-size:clamp(18px,2.2vw,24px);line-height:1;text-align:right}
-.pc .band .mn{font-size:9px;text-align:right;opacity:.9}
-.pc .band svg{width:clamp(22px,3vw,34px);height:auto;flex:none}
-.pc .bd{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:4% 8% 8%;text-align:center}
-.pc .hw{font-weight:700;font-size:clamp(12px,1.4vw,15px);line-height:1.4;word-break:auto-phrase}
-.pc .sc{font-size:clamp(10px,1.1vw,12px);line-height:1.6;word-break:auto-phrase}
-.pc .bd svg{width:34%;height:auto}
+.pcscroll{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px}
+.pcrow{display:grid;grid-template-columns:repeat(5,minmax(118px,1fr));gap:10px}
+.pc{container-type:inline-size;aspect-ratio:63/88;background:#fff;border:1px solid var(--line);border-radius:8px;display:flex;flex-direction:column}
+.pc .band{display:flex;justify-content:space-between;align-items:center;padding:8cqi 8cqi 6cqi;gap:4cqi;border-radius:7px 7px 0 0}
+.pc .band .nm{font-weight:700;letter-spacing:.1em;font-size:10cqi;line-height:1.2}
+.pc .band .en2{font-family:Cambria,Georgia,serif;font-style:italic;font-size:6cqi;opacity:.85;white-space:nowrap}
+.pc .band .no{font-family:Cambria,Georgia,serif;font-style:italic;font-size:15cqi;line-height:1;text-align:right}
+.pc .band .mn{font-size:5.5cqi;text-align:right;opacity:.9;white-space:nowrap}
+.pc .band svg{width:14cqi;height:auto;flex:none}
+.pc .bd{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3.5cqi;padding:4cqi 7cqi 7cqi;text-align:center}
+.pc .hw{font-weight:700;font-size:9cqi;line-height:1.4;word-break:auto-phrase}
+.pc .sc{font-size:7cqi;line-height:1.6;word-break:auto-phrase}
+.pc .bd svg{width:30cqi;height:auto}
 .codebox{font-family:Cambria,Georgia,monospace;background:#F7F5F0;padding:12px;border-radius:4px;word-break:break-all;font-size:13px}
 </style>
 </head>
