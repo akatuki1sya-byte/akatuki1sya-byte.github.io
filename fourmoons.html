@@ -171,7 +171,7 @@ function showCards(){
   sel.forEach(function(ids,i){h+='<hr><div class="sechead"><span class="roman">'+["I","II","III"][i]+'</span><h2>'+PERIODS[i].nm+'</h2></div><div class="pcrow" style="margin-top:12px">'+ids.map(function(id){return pcard(card(id));}).join("")+'</div>';});
   h+='<hr><div class="sechead"><span class="roman">IV</span><h2>講師に送るコード</h2></div><p class="lead">下のコードをコピーして、講師に送ってください。</p><div class="codebox" id="code">'+esc(cd)+'</div>';
   h+='<div class="actions"><button class="primary" id="ccode">コードをコピー</button><button class="ghost" onclick="window.print()">カードを印刷する</button></div><div id="copied" class="note"></div>';
-  h+='<p class="note" style="margin-top:32px">このカードは、対人関係の円環モデルやキャリア構築理論などの心理学の知見を参考に、一般社団法人暁月が独自に設計した、自分と向き合い対話するためのツールです。</p>';
+  h+='<p class="note" style="margin-top:32px">このカードは、対人関係の円環モデルやキャリア構築理論などの心理学の知見を参考に、一般社団法人暁月が独自に設計した行動特性理解ツールです。いまの立場や役割で表れている行動特性を、本人が理解し、対話するために用います。人事評価や選考には用いません。</p>';
   h+='<footer>一般社団法人暁月　組織に、哲学を。心に、豊かさを。</footer>';
   var E=byId("result");E.innerHTML=h;E.classList.remove("hidden");window.scrollTo(0,0);
   byId("ccode").onclick=function(){var t=cd,done=function(){byId("copied").textContent="コピーしました。";};
