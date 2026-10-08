@@ -2,7 +2,6 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<script src="/akatsuki-gate.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>四つの月 ── 光と影のカード</title>
 <style>
@@ -85,13 +84,13 @@ footer{margin-top:48px;font-size:12px;color:var(--gray);text-align:center}
 <div id="intro" class="wrap">
   <div class="en">Four Moons ── Cards of Light and Shadow</div>
   <h1>四つの月　光と影のカード</h1>
-  <p class="lead">これから、あなたの過去・現在・未来について、それぞれ5枚ずつ、合わせて15枚のカードを選んでいただきます。カードは全部で52枚あり、一枚に一つずつ、職場でよくある場面が書かれています。</p>
+  <p class="lead">これから、あなたの過去・現在・未来について、それぞれ5枚ずつカードを選んでいただきます。続けて、困ったときのあなたと、周りの人の気になる姿を、3枚ずつ選んでいただきます。カードには、職場でよくある場面が一つずつ書かれています。</p>
   <hr>
   <div class="sechead"><span class="roman">I</span><h3 style="margin:0">選び方</h3></div>
   <p class="lead">正しい答えはありません。よく見せようとせず、「たしかに、自分はこうしている（こうしていた）」と感じるものを選んでください。</p>
-  <p class="lead">まず52枚をひととおり眺めてから選んでください。見出しの言葉よりも、下に書かれた場面を読んで選ぶのがおすすめです。同じカードを、別の時期にもう一度選んでもかまいません。</p>
+  <p class="lead">見出しの言葉よりも、下に書かれた場面を読んで選ぶのがおすすめです。同じカードを、別の時期にもう一度選んでもかまいません。</p>
   <div class="sechead"><span class="roman">II</span><h3 style="margin:0">所要時間</h3></div>
-  <p class="lead">およそ10〜15分です。選び終えると、あなたが選んだ15枚のカードが並びます。</p>
+  <p class="lead">およそ15〜20分です。選び終えると、あなたが選んだ21枚のカードが並びます。</p>
   <div class="sechead"><span class="roman">III</span><h3 style="margin:0">お名前</h3></div>
   <p class="lead"><label for="uname">お名前（またはニックネーム）を入れてください。</label><br><input id="uname" type="text" autocomplete="off" style="font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:4px;width:280px;max-width:100%;margin-top:8px"></p>
   <div class="actions"><button class="primary" id="start">はじめる</button></div>
@@ -100,11 +99,11 @@ footer{margin-top:48px;font-size:12px;color:var(--gray);text-align:center}
 <div id="pick" class="hidden">
   <div class="bar"><div class="barin">
     <div>
-      <div class="steps"><span data-s="0">I　過去</span><span data-s="1">II　現在</span><span data-s="2">III　未来</span></div>
+      <div class="steps"><span>I　過去</span><span>II　現在</span><span>III　未来</span><span>IV　困ったとき</span><span>V　気になる相手</span></div>
       <div id="ptitle" style="font-weight:700;color:var(--mid);font-size:17px"></div>
     </div>
     <div style="display:flex;align-items:center;gap:16px">
-      <span class="count"><span id="cnt">0</span> / 5</span>
+      <span class="count"><span id="cnt">0</span> / <span id="need">5</span></span>
       <button class="ghost hidden" id="same">過去と同じ</button><button class="ghost" id="back">戻る</button>
       <button class="primary" id="next" disabled>次へ</button>
     </div>
@@ -124,17 +123,19 @@ var ST={AK:{nm:"暁月",en:"Dawn Moon",c:"#1E6B52",fg:"#ffffff",t:"#1E6B52"},HI:
 YU:{nm:"夕月",en:"Evening Moon",c:"#D9A21B",fg:"#1B2340",t:"#7E5C0A"},YO:{nm:"夜月",en:"Night Moon",c:"#1F2F4A",fg:"#ffffff",t:"#1F2F4A"}};
 var MOON={1:"朔",2:"二日月",3:"三日月",4:"四日月",5:"五日月",6:"六日月",7:"上弦",8:"八日月",9:"九日月",10:"十日月",11:"十一日月",12:"十二日月",13:"十三夜"};
 var PERIODS=[
- {nm:"過去",title:"過去のあなた",desc:"数年前の自分を思い出してください。そのころのあなたに当てはまるカードを5枚選びます。"},
- {nm:"現在",title:"今のあなた",desc:"今の職場や暮らしの中のあなたに当てはまるカードを5枚選びます。"},
- {nm:"未来",title:"これからのあなた",desc:"これから、こうありたいと思うあなたに近いカードを5枚選びます。"}];
-var step=0, sel=[[],[],[]];
+ {nm:"過去",k:5,title:"過去のあなた",desc:"数年前の自分を思い出してください。そのころのあなたに当てはまるカードを5枚選びます。"},
+ {nm:"現在",k:5,title:"今のあなた",desc:"今の職場や暮らしの中のあなたに当てはまるカードを5枚選びます。"},
+ {nm:"未来",k:5,title:"これからのあなた",desc:"これから、こうありたいと思うあなたに近いカードを5枚選びます。"},
+ {nm:"困ったとき",k:3,title:"困ったときのあなた",desc:"仕事で追い込まれたとき、思うようにいかないとき、迷ったときのあなたに当てはまるカードを3枚選びます。ふだんの自分と違っていてもかまいません。"},
+ {nm:"気になる相手",k:3,title:"周りの人の、気になる姿",desc:"今度は、カードの文を周りの人の姿として読んでください。職場の人の言動で、気になる・引っかかる・ついイライラしてしまうものを3枚選びます。特定の誰かを思い浮かべてもかまいません。"}];
+var step=0, sel=[[],[],[],[],[]];
 function byId(id){return document.getElementById(id);}
 function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var x=a[i];a[i]=a[j];a[j]=x;}return a;}
 function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");}
 function card(id){for(var i=0;i<CARDS.length;i++){if(CARDS[i].id===id)return CARDS[i];}}
 function renderPick(){
   var P=PERIODS[step];
-  byId("ptitle").textContent=P.title+"　── 5枚を選んでください";
+  byId("ptitle").textContent=P.title+"　── "+P.k+"枚を選んでください";
   byId("pdesc").textContent=P.desc;
   var sp=document.querySelectorAll(".steps span");
   for(var i=0;i<sp.length;i++){sp[i].className=(i===step?"on":"");}
@@ -149,13 +150,13 @@ function renderPick(){
   update(); window.scrollTo(0,0);
 }
 function toggle(id,b){var s=sel[step], i=s.indexOf(id);
-  if(i>=0){s.splice(i,1);b.setAttribute("aria-pressed","false");} else { if(s.length>=5)return; s.push(id);b.setAttribute("aria-pressed","true");}
+  if(i>=0){s.splice(i,1);b.setAttribute("aria-pressed","false");} else { if(s.length>=PERIODS[step].k)return; s.push(id);b.setAttribute("aria-pressed","true");}
   update();}
-function update(){byId("cnt").textContent=sel[step].length; byId("next").disabled=sel[step].length!==5; byId("next").textContent= step===2?"選び終える":"次へ";}
+function update(){var n=PERIODS[step].k; byId("need").textContent=n; byId("cnt").textContent=sel[step].length; byId("next").disabled=sel[step].length!==n; byId("next").textContent= step===4?"選び終える":"次へ";}
 byId("start").onclick=function(){byId("intro").classList.add("hidden");byId("pick").classList.remove("hidden");step=0;renderPick();};
 byId("same").onclick=function(){ sel[1]=sel[0].slice(); renderPick(); };
 byId("back").onclick=function(){ if(step===0){byId("pick").classList.add("hidden");byId("intro").classList.remove("hidden");} else {step--;renderPick();} };
-byId("next").onclick=function(){ if(step<2){step++;renderPick();} else {showCards();} };
+byId("next").onclick=function(){ if(step<4){step++;renderPick();} else {showCards();} };
 function moonSvg(n,ring){var size=80,r=34,cx=40, th=n<=7?(n-1)*(Math.PI/2)/6:Math.PI/2+(n-7)*(0.32*Math.PI)/6;
   var c=Math.cos(th), rx=Math.abs(c)*r, lit="";
   if(n>1){var d = n===7 ? "M40,6 A34,34 0 0 1 40,74 Z" : "M40,6 A34,34 0 0 1 40,74 A"+rx.toFixed(2)+",34 0 0 "+(c>0?0:1)+" 40,6 Z"; lit='<path d="'+d+'" fill="#F4ECD6"/>';}
@@ -167,11 +168,10 @@ function code(name){return (name||"名前なし").replace(/[\/|\n]/g," ")+"/"+se
 function showCards(){
   byId("pick").classList.add("hidden");
   var name=byId("uname").value.trim(), cd=code(name);
-  var h='<div class="en">Your Fifteen Cards</div><h1>'+(name?esc(name)+"さんが":"あなたが")+'選んだ15枚</h1><p class="lead">過去・現在・未来のそれぞれに選んだカードです。並べて眺めてみて、気づいたことや心に残るカードがあれば、メモしておいてください。</p><p class="note">カードの色や数字、月の形にはそれぞれ意味があります。その意味は、研修の最後にお伝えします。</p>';
-  sel.forEach(function(ids,i){h+='<hr><div class="sechead"><span class="roman">'+["I","II","III"][i]+'</span><h2>'+PERIODS[i].nm+'</h2></div><div class="pcrow" style="margin-top:12px">'+ids.map(function(id){return pcard(card(id));}).join("")+'</div>';});
+  var h='<div class="en">Your Cards</div><h1>'+(name?esc(name)+"さんが":"あなたが")+'選んだカード</h1><p class="lead">過去・現在・未来、困ったとき、気になる相手のそれぞれに選んだカードです。並べて眺めてみて、気づいたことや心に残るカードがあれば、メモしておいてください。</p><p class="note">カードの色や数字、月の形にはそれぞれ意味があります。その意味は、研修の最後にお伝えします。</p>';
+  sel.forEach(function(ids,i){h+='<hr><div class="sechead"><span class="roman">'+["I","II","III","IV","V"][i]+'</span><h2>'+PERIODS[i].nm+'</h2></div>'+(i===4?'<p class="note">周りの人の言動で、気になる・引っかかるとして選んだカードです。</p>':'')+'<div class="pcscroll" style="margin-top:12px"><div class="pcrow">'+ids.map(function(id){return pcard(card(id));}).join("")+'</div></div>';});
   h+='<hr><div class="sechead"><span class="roman">IV</span><h2>講師に送るコード</h2></div><p class="lead">下のコードをコピーして、講師に送ってください。</p><div class="codebox" id="code">'+esc(cd)+'</div>';
   h+='<div class="actions"><button class="primary" id="ccode">コードをコピー</button><button class="ghost" onclick="window.print()">カードを印刷する</button></div><div id="copied" class="note"></div>';
-  h+='<p class="note" style="margin-top:32px">このカードは、対人関係の円環モデルやキャリア構築理論などの心理学の知見を参考に、一般社団法人暁月が独自に設計した行動特性理解ツールです。いまの立場や役割で表れている行動特性を、本人が理解し、対話するために用います。人事評価や選考には用いません。</p>';
   h+='<footer>一般社団法人暁月　組織に、哲学を。心に、豊かさを。</footer>';
   var E=byId("result");E.innerHTML=h;E.classList.remove("hidden");window.scrollTo(0,0);
   byId("ccode").onclick=function(){var t=cd,done=function(){byId("copied").textContent="コピーしました。";};
