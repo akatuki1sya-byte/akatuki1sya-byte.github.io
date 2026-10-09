@@ -84,11 +84,11 @@ footer{margin-top:48px;font-size:12px;color:var(--gray);text-align:center}
 <div id="intro" class="wrap">
   <div class="en">Four Moons ── Cards of Light and Shadow</div>
   <h1>四つの月　光と影のカード</h1>
-  <p class="lead">これから、あなたの過去・現在・未来について、それぞれ5枚ずつカードを選んでいただきます。続けて、困ったときのあなたと、周りの人の気になる姿を、3枚ずつ選んでいただきます。カードには、職場でよくある場面が一つずつ書かれています。</p>
+  <p class="lead">これから、あなたの過去・現在・未来について、それぞれ5枚ずつカードを選んでいただきます。続けて、困ったときのあなたと、周りの人の気になる姿を、3枚ずつ選んでいただきます。合わせて21枚です。カードは全部で52枚あり、一枚に一つずつ、職場でよくある場面が書かれています。</p>
   <hr>
   <div class="sechead"><span class="roman">I</span><h3 style="margin:0">選び方</h3></div>
   <p class="lead">正しい答えはありません。よく見せようとせず、「たしかに、自分はこうしている（こうしていた）」と感じるものを選んでください。</p>
-  <p class="lead">見出しの言葉よりも、下に書かれた場面を読んで選ぶのがおすすめです。同じカードを、別の時期にもう一度選んでもかまいません。</p>
+  <p class="lead">まず52枚をひととおり眺めてから選んでください。見出しの言葉よりも、下に書かれた場面を読んで選ぶのがおすすめです。同じカードを、別の時期にもう一度選んでもかまいません。</p>
   <div class="sechead"><span class="roman">II</span><h3 style="margin:0">所要時間</h3></div>
   <p class="lead">およそ15〜20分です。選び終えると、あなたが選んだ21枚のカードが並びます。</p>
   <div class="sechead"><span class="roman">III</span><h3 style="margin:0">お名前</h3></div>
@@ -121,7 +121,6 @@ var CARDS = [{"id": "AK-01", "s": "AK", "n": 1, "w": "ひとりで決めてし�
 var ICON = {"AK": "<svg width=\"40\" height=\"40\" viewBox=\"0 0 60 60\" style=\"flex:none\"><path fill=\"#ffffff\" d=\"M30,2 L44,20 L37,20 L50,36 L41,36 L54,50 L6,50 L19,36 L10,36 L23,20 L16,20 Z\"/><rect x=\"26\" y=\"50\" width=\"8\" height=\"8\" fill=\"#ffffff\"/></svg>", "HI": "<svg width=\"40\" height=\"40\" viewBox=\"0 0 60 60\" style=\"flex:none\"><path fill=\"#ffffff\" d=\"M30,3 C33,13 44,20 47,32 C50,45 41,57 30,57 C19,57 10,48 12,36 C13,28 18,24 20,17 C23,23 25,27 27,29 C29,20 28,11 30,3 Z\"/><path fill=\"#B7322C\" d=\"M30,30 C33,36 39,40 39,47 C39,53 35,57 30,57 C25,57 21,53 21,47 C21,42 25,39 26,34 C27,37 28,39 29,40 C30,37 30,33 30,30 Z\"/></svg>", "YU": "<svg width=\"40\" height=\"40\" viewBox=\"0 0 60 60\" style=\"flex:none\"><path fill=\"#1B2340\" d=\"M2,48 L20,18 L28,30 L38,12 L58,48 Z\"/><path fill=\"#D9A21B\" d=\"M38,12 L44,23 L40,21 L36,25 L33,21 Z\"/><rect x=\"2\" y=\"51\" width=\"56\" height=\"3\" fill=\"#1B2340\"/><rect x=\"10\" y=\"56\" width=\"40\" height=\"2.5\" fill=\"#1B2340\"/></svg>", "YO": "<svg width=\"40\" height=\"40\" viewBox=\"0 0 60 60\" style=\"flex:none\"><path fill=\"#ffffff\" d=\"M30,3 C36,15 48,28 48,40 A18,18 0 0 1 12,40 C12,28 24,15 30,3 Z\"/><path fill=\"none\" stroke=\"#1F2F4A\" stroke-width=\"3\" stroke-linecap=\"round\" d=\"M20,41 A10,10 0 0 0 28,50\"/></svg>"};
 var ST={AK:{nm:"暁月",en:"Dawn Moon",c:"#1E6B52",fg:"#ffffff",t:"#1E6B52"},HI:{nm:"昼月",en:"Day Moon",c:"#B7322C",fg:"#ffffff",t:"#9A2A25"},
 YU:{nm:"夕月",en:"Evening Moon",c:"#D9A21B",fg:"#1B2340",t:"#7E5C0A"},YO:{nm:"夜月",en:"Night Moon",c:"#1F2F4A",fg:"#ffffff",t:"#1F2F4A"}};
-var MOON={1:"朔",2:"二日月",3:"三日月",4:"四日月",5:"五日月",6:"六日月",7:"上弦",8:"八日月",9:"九日月",10:"十日月",11:"十一日月",12:"十二日月",13:"十三夜"};
 var PERIODS=[
  {nm:"過去",k:5,title:"過去のあなた",desc:"数年前の自分を思い出してください。そのころのあなたに当てはまるカードを5枚選びます。"},
  {nm:"現在",k:5,title:"今のあなた",desc:"今の職場や暮らしの中のあなたに当てはまるカードを5枚選びます。"},
@@ -162,16 +161,18 @@ function moonSvg(n,ring){var size=80,r=34,cx=40, th=n<=7?(n-1)*(Math.PI/2)/6:Mat
   if(n>1){var d = n===7 ? "M40,6 A34,34 0 0 1 40,74 Z" : "M40,6 A34,34 0 0 1 40,74 A"+rx.toFixed(2)+",34 0 0 "+(c>0?0:1)+" 40,6 Z"; lit='<path d="'+d+'" fill="#F4ECD6"/>';}
   return '<svg viewBox="0 0 80 80" aria-hidden="true"><circle cx="40" cy="40" r="34" fill="#1B2340"/>'+lit+'<circle cx="40" cy="40" r="34" fill="none" stroke="'+ring+'" stroke-width="1"/></svg>';}
 function pcard(c){var S=ST[c.s];
-  return '<div class="pc"><div class="band" style="background:'+S.c+';color:'+S.fg+'"><div style="display:flex;align-items:center;gap:6px">'+ICON[c.s]+'<div><div class="nm">'+S.nm+'</div><div class="en2">'+S.en+'</div></div></div><div><div class="no">'+c.n+'</div><div class="mn">'+MOON[c.n]+'</div></div></div>'+
+  return '<div class="pc"><div class="band" style="background:'+S.c+';color:'+S.fg+'"><div style="display:flex;align-items:center;gap:6px">'+ICON[c.s]+'<div><div class="nm">'+S.nm+'</div><div class="en2">'+S.en+'</div></div></div><div><div class="no">'+c.n+'</div></div></div>'+
   '<div class="bd"><div class="hw" style="color:'+S.t+'">'+esc(c.w)+'</div>'+moonSvg(c.n,S.c)+'<div class="sc">'+esc(c.t)+'</div></div></div>';}
 function code(name){return (name||"名前なし").replace(/[\/|\n]/g," ")+"/"+sel.map(function(a){return a.map(function(x){return x.replace("-","");}).join(",");}).join("/");}
 function showCards(){
   byId("pick").classList.add("hidden");
   var name=byId("uname").value.trim(), cd=code(name);
-  var h='<div class="en">Your Cards</div><h1>'+(name?esc(name)+"さんが":"あなたが")+'選んだカード</h1><p class="lead">過去・現在・未来、困ったとき、気になる相手のそれぞれに選んだカードです。並べて眺めてみて、気づいたことや心に残るカードがあれば、メモしておいてください。</p><p class="note">カードの色や数字、月の形にはそれぞれ意味があります。その意味は、研修の最後にお伝えします。</p>';
+  var h='<div class="en">Your Cards</div><h1>'+(name?esc(name)+"さんが":"あなたが")+'選んだカード</h1><p class="lead">過去・現在・未来、困ったとき、気になる相手のそれぞれに選んだカードです。並べて眺めてみて、気づいたことや心に残るカードがあれば、メモしておいてください。</p><p class="note">カードの色や数字の意味は、研修の最後にお伝えします。</p>';
   sel.forEach(function(ids,i){h+='<hr><div class="sechead"><span class="roman">'+["I","II","III","IV","V"][i]+'</span><h2>'+PERIODS[i].nm+'</h2></div>'+(i===4?'<p class="note">周りの人の言動で、気になる・引っかかるとして選んだカードです。</p>':'')+'<div class="pcscroll" style="margin-top:12px"><div class="pcrow">'+ids.map(function(id){return pcard(card(id));}).join("")+'</div></div>';});
-  h+='<hr><div class="sechead"><span class="roman">IV</span><h2>講師に送るコード</h2></div><p class="lead">下のコードをコピーして、講師に送ってください。</p><div class="codebox" id="code">'+esc(cd)+'</div>';
+  h+='<hr><div class="sechead"><span class="roman">VI</span><h2>講師に送るコード</h2></div><p class="lead">下のコードをコピーして、講師に送ってください。</p><div class="codebox" id="code">'+esc(cd)+'</div>';
   h+='<div class="actions"><button class="primary" id="ccode">コードをコピー</button><button class="ghost" onclick="window.print()">カードを印刷する</button></div><div id="copied" class="note"></div>';
+  h+='<hr><p class="note">この結果は、あなたを決めつけるものではありません。映し出しているのは性格ではなく、いまの立場や役割での行動の出方と、選んだ日の気持ちです。</p>';
+  h+='<p class="note">このツールは、対人関係の円環モデルやキャリア構築理論などの心理学の知見を参考に、一般社団法人暁月が独自に設計した行動特性理解ツールです。ご自身を理解し、対話するための手がかりとして用い、人事評価や選考には用いません。</p>';
   h+='<footer>一般社団法人暁月　組織に、哲学を。心に、豊かさを。</footer>';
   var E=byId("result");E.innerHTML=h;E.classList.remove("hidden");window.scrollTo(0,0);
   byId("ccode").onclick=function(){var t=cd,done=function(){byId("copied").textContent="コピーしました。";};
