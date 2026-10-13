@@ -92,6 +92,10 @@
     section{padding:46px 0}
     .pair,.checks,.basics{grid-template-columns:1fr}
   }
+  /* 複製の抑止 */
+  body{-webkit-user-select:none;-moz-user-select:none;user-select:none;-webkit-touch-callout:none}
+  img{-webkit-user-drag:none;pointer-events:none}
+  .copyright{text-align:center;font-size:12px;color:var(--sub);padding:24px 20px 32px;border-top:1px solid var(--line)}
 </style>
 </head>
 <body>
@@ -205,5 +209,16 @@
   </section>
 </main>
 
+<footer class="copyright">© 一般社団法人暁月 本ページの内容の無断転載・複製を禁じます。</footer>
+<script>
+(function(){
+  var stop=function(e){e.preventDefault();};
+  ['contextmenu','copy','cut','dragstart','selectstart'].forEach(function(t){document.addEventListener(t,stop);});
+  document.addEventListener('keydown',function(e){
+    var k=(e.key||'').toLowerCase();
+    if((e.ctrlKey||e.metaKey)&&['c','x','a','s','u','p'].indexOf(k)>-1){e.preventDefault();}
+  });
+})();
+</script>
 </body>
 </html>
