@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>暁月の伴走のしくみ</title>
+<style>
+  :root{
+    --ink:#1f2a44;        /* 本文・見出し：深い藍 */
+    --sub:#5a6478;        /* 補足文 */
+    --line:#d9dde6;       /* 罫線 */
+    --navy:#2b3a67;       /* 枠線の主色 */
+    --dawn:#c08a3e;       /* 暁の金：アクセント */
+    --dawn-soft:#fbf6ee;  /* ごく淡い背景（多用しない） */
+    --bg:#ffffff;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:var(--bg);color:var(--ink);
+    font-family:"Meiryo UI","Meiryo","Hiragino Kaku Gothic ProN","Hiragino Sans","Noto Sans JP",sans-serif;
+    line-height:1.9;font-size:16px;letter-spacing:.02em;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:0 20px}
+  section{padding:64px 0;border-bottom:1px solid var(--line)}
+  section:last-of-type{border-bottom:none}
+
+  /* 見出し */
+  .label{
+    display:inline-block;font-size:12px;letter-spacing:.2em;color:var(--dawn);
+    border-bottom:1px solid var(--dawn);padding-bottom:2px;margin-bottom:14px;font-weight:bold;
+  }
+  h2{font-size:clamp(20px,3.6vw,26px);line-height:1.6;margin-bottom:20px;font-weight:bold}
+  p+p{margin-top:14px}
+  .lead{font-size:clamp(16px,2.4vw,18px)}
+
+  /* ヒーロー */
+  .hero{padding:80px 0 64px;text-align:center;position:relative;overflow:hidden}
+  .hero::before{ /* 夜明けの水平線を思わせる細い線 */
+    content:"";position:absolute;left:50%;top:44px;transform:translateX(-50%);
+    width:120px;height:1px;background:linear-gradient(90deg,transparent,var(--dawn),transparent);
+  }
+  .hero h1{font-size:clamp(24px,5vw,36px);line-height:1.6;margin:18px 0 22px;font-weight:bold}
+  .hero h1 em{font-style:normal;color:var(--navy);border-bottom:2px solid var(--dawn)}
+  .hero p{color:var(--sub);max-width:640px;margin:0 auto}
+
+  /* 二つの軸 */
+  .axes{display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:center;margin:32px 0 0}
+  .axis{border:1.5px solid var(--navy);border-radius:10px;padding:24px 20px;text-align:center;background:#fff}
+  .axis .q{font-size:19px;font-weight:bold;margin-bottom:6px}
+  .axis .how{font-size:15px}
+  .axis .d{font-size:13px;color:var(--sub);margin-top:4px}
+  .times{font-size:30px;color:var(--dawn);font-weight:bold}
+  .arrow{text-align:center;color:var(--navy);font-size:22px;margin:14px 0}
+  .result{
+    border:2px solid var(--dawn);border-radius:10px;padding:22px;text-align:center;
+    max-width:460px;margin:0 auto;background:var(--dawn-soft);
+  }
+  .result .q{font-size:20px;font-weight:bold}
+  .result .d{font-size:14px;color:var(--sub)}
+  .note{text-align:center;color:var(--sub);margin-top:22px;font-size:15px}
+
+  /* ツールで把握できること */
+  .grid4{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin:28px 0}
+  .card{border:1px solid var(--line);border-left:3px solid var(--navy);border-radius:8px;padding:18px 20px}
+  .card h3{font-size:16px;margin-bottom:4px;color:var(--navy)}
+  .card p{font-size:14px;color:var(--sub);line-height:1.8}
+
+  /* AWAKE */
+  .phases{list-style:none;margin-top:28px;display:grid;gap:12px}
+  .phase{
+    display:grid;grid-template-columns:150px 1fr 1fr;gap:18px;align-items:center;
+    border:1px solid var(--line);border-radius:8px;padding:16px 20px;
+  }
+  .phase .name{font-weight:bold;color:var(--navy);line-height:1.5}
+  .phase .name small{display:block;font-size:12px;color:var(--sub);font-weight:normal}
+  .phase .stuck,.phase .focus{font-size:14px;line-height:1.75}
+  .phase .tag{display:block;font-size:11px;letter-spacing:.1em;color:var(--sub);margin-bottom:2px}
+  .phase .focus{color:var(--ink)}
+  .phase .focus .tag{color:var(--dawn)}
+  .initial{
+    display:inline-flex;width:30px;height:30px;border:1.5px solid var(--dawn);border-radius:50%;
+    align-items:center;justify-content:center;color:var(--dawn);font-size:14px;margin-right:8px;vertical-align:middle;
+  }
+
+  /* 流れ */
+  .flow{list-style:none;counter-reset:step;margin-top:28px;position:relative}
+  .flow li{counter-increment:step;position:relative;padding:0 0 26px 64px}
+  .flow li::before{
+    content:counter(step);position:absolute;left:0;top:0;width:40px;height:40px;border-radius:50%;
+    border:1.5px solid var(--navy);color:var(--navy);display:flex;align-items:center;justify-content:center;font-weight:bold;background:#fff;z-index:1
+  }
+  .flow li::after{content:"";position:absolute;left:20px;top:40px;bottom:0;width:1px;background:var(--line)}
+  .flow li:last-child::after{display:none}
+  .flow h3{font-size:17px;line-height:40px}
+  .flow p{font-size:14px;color:var(--sub)}
+
+  /* 背景 */
+  .basis{border:1px solid var(--line);border-radius:10px;padding:28px}
+  .basis p{font-size:15px}
+
+  /* CTA */
+  .cta{text-align:center}
+  .cta p{max-width:620px;margin:0 auto}
+  .btn{
+    display:inline-block;margin-top:30px;padding:16px 40px;border:2px solid var(--navy);border-radius:999px;
+    color:var(--navy);text-decoration:none;font-weight:bold;font-size:16px;transition:all .2s;
+  }
+  .btn:hover{background:var(--navy);color:#fff}
+  .motto{margin-top:48px;color:var(--navy);font-size:15px;letter-spacing:.15em}
+  .motto span{display:inline-block;margin:0 .4em}
+
+  @media (max-width:640px){
+    section{padding:48px 0}
+    .axes{grid-template-columns:1fr}
+    .times{text-align:center;line-height:1}
+    .grid4{grid-template-columns:1fr}
+    .phase{grid-template-columns:1fr;gap:8px}
+    .flow li{padding-left:56px}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="label">AKATSUKI APPROACH</span>
+    <h1>人が動けない理由は、<br><em>一人ひとり違う。</em></h1>
+    <p>「何度言っても部下が動かない」「やる気が見えない」。その原因の多くは、能力や意欲ではありません。その人の動き方と、周りの関わり方がずれていることにあります。</p>
+  </div>
+</header>
+
+<main>
+  <section>
+    <div class="wrap">
+      <span class="label">TWO AXES</span>
+      <h2>二つの軸で、人を見る</h2>
+      <p>暁月の伴走は、「その人はどう動くか」と「今どこで止まっているか」の二つを掛け合わせて、関わり方を決めます。</p>
+
+      <div class="axes">
+        <div class="axis">
+          <div class="q">その人はどう動くか</div>
+          <div class="how">行動特性理解ツールで把握</div>
+          <div class="d">持ち味・影・困ったときの動き方</div>
+        </div>
+        <div class="times">×</div>
+        <div class="axis">
+          <div class="q">今どこで止まっているか</div>
+          <div class="how">AWAKEモデルで特定</div>
+          <div class="d">5つの段階のうち、止まっている段階</div>
+        </div>
+      </div>
+      <div class="arrow">↓</div>
+      <div class="result">
+        <div class="q">その人に届く関わり方</div>
+        <div class="d">止まっている段階にだけ、手を打つ</div>
+      </div>
+      <p class="note">同じ「動けない」でも、動き方と止まっている段階が違えば、届く言葉も違います。</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <span class="label">BEHAVIORAL TRAITS</span>
+      <h2>暁月独自の行動特性理解ツール</h2>
+      <p>社員の方にオンラインで受けていただきます。設問に答えるのではなく直感で選んでいただく形式なので、「こう見られたい自分」ではない、本来の動き方が表れやすくなっています。</p>
+
+      <div class="grid4">
+        <div class="card"><h3>持ち味</h3><p>その人が力を発揮しやすい動き方</p></div>
+        <div class="card"><h3>影の側面</h3><p>強みの裏返しとして出やすい、つまずきやすさ</p></div>
+        <div class="card"><h3>困ったときの動き方</h3><p>迷ったとき、追い込まれたときに、どう決めどう振る舞うか</p></div>
+        <div class="card"><h3>周りの受け止め方</h3><p>他者のどんな姿が気になりやすいか</p></div>
+      </div>
+
+      <p>さらに、過去・現在・未来の三つの時期で捉えるため、その人が今どんな変化の途中にいるのかも見えてきます。結果は講師が読み解き、ご本人には開示できる範囲の傾向をお伝えします。</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <span class="label">AWAKE MODEL</span>
+      <h2>AWAKEモデル：<br>どの段階で止まっているかを特定する</h2>
+      <p>AWAKEモデルは、人が目標に向かって動き出し、続けるまでを5つの段階に分けた暁月独自の伴走モデルです。「部下が動かない」という同じ悩みでも、止まっている段階によって打つべき手はまったく違います。</p>
+
+      <ol class="phases">
+        <li class="phase">
+          <div class="name"><span class="initial">A</span>Assess<small>現状を捉える</small></div>
+          <div class="stuck"><span class="tag">ここで止まると</span>自分の状況を正しく見られず、問題に気づかない</div>
+          <div class="focus"><span class="tag">関わりの焦点</span>事実と気持ちを整理する</div>
+        </li>
+        <li class="phase">
+          <div class="name"><span class="initial">W</span>Widen<small>視野を広げる</small></div>
+          <div class="stuck"><span class="tag">ここで止まると</span>選択肢が見えず、思い込みに縛られる</div>
+          <div class="focus"><span class="tag">関わりの焦点</span>別の見方や可能性に目を向ける</div>
+        </li>
+        <li class="phase">
+          <div class="name"><span class="initial">A</span>Aim<small>目指す姿を定める</small></div>
+          <div class="stuck"><span class="tag">ここで止まると</span>何を目指せばいいかが曖昧なまま動けない</div>
+          <div class="focus"><span class="tag">関わりの焦点</span>本人が納得できる目標を言葉にする</div>
+        </li>
+        <li class="phase">
+          <div class="name"><span class="initial">K</span>Key Action<small>行動を決める</small></div>
+          <div class="stuck"><span class="tag">ここで止まると</span>やる気はあるのに、何から手をつけるかが決まらない</div>
+          <div class="focus"><span class="tag">関わりの焦点</span>最初の一歩を具体的にする</div>
+        </li>
+        <li class="phase">
+          <div class="name"><span class="initial">E</span>Encourage<small>続ける</small></div>
+          <div class="stuck"><span class="tag">ここで止まると</span>始めても続かず、元に戻ってしまう</div>
+          <div class="focus"><span class="tag">関わりの焦点</span>小さな前進を認め、支え続ける</div>
+        </li>
+      </ol>
+      <p style="margin-top:24px">多くの職場では、これらをすべて「やる気の問題」として扱いがちです。暁月は止まっている段階を見極め、そこにだけ手を打ちます。だから、限られた時間でも変化が生まれます。</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <span class="label">FLOW</span>
+      <h2>伴走の流れ</h2>
+      <ol class="flow">
+        <li><h3>無料相談</h3><p>御社の状況と、人に関するお悩みを伺います。</p></li>
+        <li><h3>行動特性理解ツールの受検</h3><p>対象の社員の方に、オンラインで受けていただきます。</p></li>
+        <li><h3>読み解きと課題の特定</h3><p>一人ひとりの動き方と、止まっている段階を明らかにします。チーム全体の傾向もお伝えします。</p></li>
+        <li><h3>AWAKEによる伴走</h3><p>管理職の方との面談や研修を通じて、その人に届く関わり方を一緒に実践します。必要な社員の方には、国家資格キャリアコンサルタントが個別面談で関わります。</p></li>
+        <li><h3>変化の確認</h3><p>一定期間ごとに再受検し、行動特性とチームの変化を確かめます。</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="basis">
+        <span class="label">FOUNDATION</span>
+        <h2>心理学の知見にもとづく、暁月独自の設計</h2>
+        <p>行動特性理解ツールとAWAKEモデルは、発達心理学、動機づけの理論、キャリア理論などの知見を参考に、暁月が独自に設計したものです。人を型にはめるのではなく、変化の途中にいる一人の人として捉えることを大切にしています。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="wrap">
+      <span class="label">FREE TRIAL</span>
+      <h2>まずは、経営者ご自身で<br>体験してください</h2>
+      <p>社員の方に受けていただく前に、まず経営者ご本人が行動特性理解ツールを無料で体験できます。ご自身の持ち味と、迷ったときの動き方を知ることから始めてみませんか。結果をもとに、御社で活かせる関わり方をご提案します。</p>
+      <a class="btn" href="https://akatsukicoach.org/contact" target="_top">経営者向け 無料体験を申し込む</a>
+      <p class="motto"><span>組織に、哲学を。</span><span>心に、豊かさを。</span></p>
+    </div>
+  </section>
+</main>
+
+</body>
+</html>
