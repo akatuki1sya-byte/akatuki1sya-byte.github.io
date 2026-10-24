@@ -67,7 +67,7 @@ footer{margin-top:48px;font-size:12px;color:var(--gray);text-align:center}
 .pcscroll{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px}
 .pcrow{display:grid;grid-template-columns:repeat(5,minmax(118px,1fr));gap:10px}
 .pc{container-type:inline-size;aspect-ratio:63/88;background:#fff;border:1px solid var(--line);border-radius:8px;display:flex;flex-direction:column}
-.pc .band{display:flex;justify-content:space-between;align-items:center;padding:8cqi 8cqi 6cqi;gap:4cqi;border-radius:7px 7px 0 0}
+.pc{overflow:hidden}.pc .band{display:flex;justify-content:flex-end;align-items:center;padding:6cqi 8cqi 0;border-top:3cqi solid}
 .pc .band .nm{font-weight:700;letter-spacing:.1em;font-size:10cqi;line-height:1.2}
 .pc .band .en2{font-family:Cambria,Georgia,serif;font-style:italic;font-size:6cqi;opacity:.85;white-space:nowrap}
 .pc .band .no{font-family:Cambria,Georgia,serif;font-style:italic;font-size:15cqi;line-height:1;text-align:right}
@@ -78,6 +78,22 @@ footer{margin-top:48px;font-size:12px;color:var(--gray);text-align:center}
 .pc .sc{font-size:7cqi;line-height:1.6;word-break:auto-phrase}
 .pc .bd svg{width:30cqi;height:auto}
 .codebox{font-family:Cambria,Georgia,monospace;background:#F7F5F0;padding:12px;border-radius:4px;word-break:break-all;font-size:13px}
+
+/* 印刷ではベタ塗りを使わない（トナー節約） */
+@media print{
+ *{box-shadow:none!important}
+ body,#handout,.hopage,.rcard,.pc,.card{background:#fff!important}
+ .comp{background:none!important;gap:2px;overflow:visible}
+ .comp>div{background:none!important;border:1.5px solid var(--sc,#999);box-sizing:border-box;border-radius:2px}
+ .legend span::before{background:none!important;border:2px solid var(--c);box-sizing:border-box}
+ .rcard .band{width:3px!important}
+ .hb{width:2px!important}
+ .codebox{background:none!important;border:1px solid var(--line)}
+ .moon circle[fill="#1B2340"]{fill:#E4E1DA}
+ .moon path{fill:#FFFFFF}
+ svg.radar polygon{fill:none!important}
+ .pc .band{border-top-width:1.5cqi!important}
+}
 </style>
 </head>
 <body>
@@ -159,9 +175,9 @@ byId("next").onclick=function(){ if(step<4){step++;renderPick();} else {showCard
 function moonSvg(n,ring){var size=80,r=34,cx=40, th=n<=7?(n-1)*(Math.PI/2)/6:Math.PI/2+(n-7)*(0.32*Math.PI)/6;
   var c=Math.cos(th), rx=Math.abs(c)*r, lit="";
   if(n>1){var d = n===7 ? "M40,6 A34,34 0 0 1 40,74 Z" : "M40,6 A34,34 0 0 1 40,74 A"+rx.toFixed(2)+",34 0 0 "+(c>0?0:1)+" 40,6 Z"; lit='<path d="'+d+'" fill="#F4ECD6"/>';}
-  return '<svg viewBox="0 0 80 80" aria-hidden="true"><circle cx="40" cy="40" r="34" fill="#1B2340"/>'+lit+'<circle cx="40" cy="40" r="34" fill="none" stroke="'+ring+'" stroke-width="1"/></svg>';}
+  return '<svg class="moon" viewBox="0 0 80 80" aria-hidden="true"><circle cx="40" cy="40" r="34" fill="#1B2340"/>'+lit+'<circle cx="40" cy="40" r="34" fill="none" stroke="'+ring+'" stroke-width="1"/></svg>';}
 function pcard(c){var S=ST[c.s];
-  return '<div class="pc"><div class="band" style="background:'+S.c+';color:'+S.fg+'"><div style="display:flex;align-items:center;gap:6px">'+ICON[c.s]+'<div><div class="nm">'+S.nm+'</div><div class="en2">'+S.en+'</div></div></div><div><div class="no">'+c.n+'</div></div></div>'+
+  return '<div class="pc"><div class="band" style="border-top-color:'+S.c+';color:'+S.t+'"><div class="no">'+c.n+'</div></div>'+
   '<div class="bd"><div class="hw" style="color:'+S.t+'">'+esc(c.w)+'</div>'+moonSvg(c.n,S.c)+'<div class="sc">'+esc(c.t)+'</div></div></div>';}
 function code(name){return (name||"名前なし").replace(/[\/|\n]/g," ")+"/"+sel.map(function(a){return a.map(function(x){return x.replace("-","");}).join(",");}).join("/");}
 function showCards(){
