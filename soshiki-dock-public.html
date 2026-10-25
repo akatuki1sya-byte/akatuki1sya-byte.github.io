@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>組織ドック｜一般社団法人暁月</title>
+<meta name="description" content="経営者が約10分で答える、組織の健康診断。組織がどの段階で止まっているかを5つの観点から見立てます。">
+<style>
+/* Layout: 一枚の健診票。上から「受診案内 → 20問 → 結果票」と縦に流れ、結果票は症状まで見せて読み解きは面談へつなぐ */
+:root{
+  --bg:#ECEAF1;        /* うすいラベンダーがかったグレー */
+  --panel:#F7F6FA;     /* 中の四角 */
+  --panel2:#E2DFE9;
+  --ink:#1F2A44;       /* ミッドナイトブルー：文字・線・アイコン */
+  --ink-soft:#56607A;
+  --gold:#B08D3C;
+  --terra:#C0623F;
+  --line:#CFCBDA;
+  --ok:#3E7D5A; --warn:#9A7A2E; --alert:#C0623F; --deep:#8E3B2E;
+  --font:"Meiryo UI","Meiryo","Hiragino Sans","Yu Gothic UI",sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#191B24;--panel:#232634;--panel2:#2C3040;--ink:#E6E8F0;--ink-soft:#A3A9BC;
+  --gold:#D4B263;--terra:#DE8463;--line:#3A3F52;--ok:#6FB58C;--warn:#D4B263;--alert:#DE8463;--deep:#E59A86;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#191B24;--panel:#232634;--panel2:#2C3040;--ink:#E6E8F0;--ink-soft:#A3A9BC;
+  --gold:#D4B263;--terra:#DE8463;--line:#3A3F52;--ok:#6FB58C;--warn:#D4B263;--alert:#DE8463;--deep:#E59A86;color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.75}
+.wrap{max-width:760px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 56px;display:flex;flex-direction:column;gap:28px}
+header{display:flex;flex-direction:column;gap:10px}
+.mark{font-size:12px;letter-spacing:.32em;color:var(--gold)}
+h1{font-size:30px;margin:0;line-height:1.3;text-wrap:balance}
+h1 small{display:block;font-size:13px;letter-spacing:.12em;color:var(--ink-soft);font-weight:normal;margin-top:4px}
+.lead{margin:0;color:var(--ink-soft);max-width:62ch}
+.rule{margin:0;background:var(--panel);border-radius:10px;padding:12px 16px;font-size:14px;max-width:62ch}
+.rule b{color:var(--terra)}
+.info{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.info div{background:var(--panel);border-radius:10px;padding:12px 14px;display:flex;gap:10px;align-items:center}
+.ic{flex:none;width:30px;height:30px;border-radius:50%;border:1.5px solid var(--ink);display:grid;place-items:center;font-size:13px;font-weight:bold}
+.info b{display:block;font-size:12px;color:var(--ink-soft);font-weight:normal}
+@media (max-width:560px){.info{grid-template-columns:1fr}}
+form{display:flex;flex-direction:column;gap:28px}
+section.stage{display:flex;flex-direction:column;gap:10px}
+.stage h2{font-size:17px;margin:0;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.stage h2 .ic{border-color:var(--gold);color:var(--gold)}
+.stage h2 span.sub{font-size:12px;color:var(--ink-soft);font-weight:normal}
+.q{background:var(--panel);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.q p{margin:0}
+.q .no{color:var(--gold);font-variant-numeric:tabular-nums;margin-right:6px}
+.opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+@media (max-width:480px){.opts{grid-template-columns:1fr}}
+.opts label{position:relative}
+.opts input{position:absolute;opacity:0;inset:0}
+.opts span{display:block;padding:8px 12px;border:1px solid var(--line);border-radius:8px;cursor:pointer;color:var(--ink-soft);background:var(--bg);font-size:13px;line-height:1.5;height:100%}
+.opts input:checked+span{border-color:var(--ink);color:var(--ink);background:var(--panel2);font-weight:bold}
+.opts input:focus-visible+span{outline:2px solid var(--gold);outline-offset:2px}
+.bar{position:sticky;bottom:0;background:var(--bg);border-top:1px solid var(--line);padding-block:12px calc(12px + env(safe-area-inset-bottom,0px));display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.prog{font-size:13px;color:var(--ink-soft);font-variant-numeric:tabular-nums}
+button{font-family:var(--font);font-size:14px;border-radius:999px;padding:10px 20px;cursor:pointer;border:1.5px solid var(--ink);background:transparent;color:var(--ink)}
+button.main{border-color:var(--terra);color:var(--terra);font-weight:bold}
+button:disabled{opacity:.4;cursor:not-allowed}
+button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+#result{display:flex;flex-direction:column;gap:20px}
+.verdict{background:var(--panel);border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:8px}
+.verdict .lbl{font-size:12px;letter-spacing:.2em;color:var(--ink-soft)}
+.verdict .big{font-size:24px;font-weight:bold}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:620px){.grid2{grid-template-columns:1fr}}
+.radar{background:var(--panel);border-radius:12px;padding:12px}
+.radar svg{width:100%;height:auto;display:block}
+.rows{display:flex;flex-direction:column;gap:8px}
+.row{background:var(--panel);border-radius:10px;padding:10px 14px;display:grid;grid-template-columns:1fr auto;gap:4px 10px;align-items:center}
+.row .nm{font-size:14px}
+.row .sc{font-variant-numeric:tabular-nums;font-weight:bold}
+.pill{grid-column:1/-1;justify-self:start;font-size:11px;padding:1px 10px;border-radius:999px;border:1px solid currentColor}
+.c-ok{color:var(--ok)}.c-warn{color:var(--warn)}.c-alert{color:var(--alert)}.c-deep{color:var(--deep)}
+.focus{border-left:3px solid var(--terra);background:var(--panel);border-radius:0 12px 12px 0;padding:16px 18px;display:flex;flex-direction:column;gap:8px}
+.focus h3,.mirror h3,.unk h3{margin:0;font-size:16px}
+.focus ul,.unk ul{margin:0;padding-left:1.2em}
+.mirror{border:1.5px solid var(--gold);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:8px}
+.mirror p,.unk p{margin:0}
+.unk{background:var(--panel);border-radius:12px;padding:16px 18px;display:flex;flex-direction:column;gap:8px}
+.next{background:var(--panel2);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:8px}
+.next h3{margin:0;font-size:16px}
+.next p{margin:0}
+.note{font-size:12px;color:var(--ink-soft)}
+footer{font-size:12px;color:var(--ink-soft);text-align:center;border-top:1px solid var(--line);padding-top:14px}
+@media (prefers-reduced-motion:no-preference){#result{animation:in .5s ease}@keyframes in{from{transform:translateY(8px)}to{transform:none}}}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0}
+a{color:var(--terra)}
+.cta{display:inline-block;border:1.5px solid var(--terra);color:var(--terra);border-radius:999px;padding:10px 22px;font-weight:bold;text-decoration:none}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div class="mark">AKATSUKI ― 組織に哲学を。心に豊かさを。</div>
+    <h1>組織ドック<small>経営者のための 組織の健康診断</small></h1>
+    <p class="lead">20の問いに答えると、組織が「どの段階で止まっているか」を5つの観点から見立てます。</p>
+    <p class="rule">答えるときは、印象ではなく<b>実際にあった出来事や数字</b>を思い浮かべてください。思い出せないときは、そのまま「思い出せない」「分からない」を選んでください。それも大切な結果になります。</p>
+    <div class="info">
+      <div><span class="ic">20</span><span><b>問い</b>5つの観点×4問</span></div>
+      <div><span class="ic">10</span><span><b>所要時間</b>約10分</span></div>
+      <div><span class="ic">1</span><span><b>回答者</b>経営者ご本人</span></div>
+    </div>
+  </header>
+
+  <form id="dock" novalidate></form>
+
+  <div class="bar">
+    <span class="prog" id="prog">0 / 20 回答済み</span>
+    <div class="btns">
+      <button type="button" class="main" id="go" disabled>結果を見る</button>
+    </div>
+  </div>
+
+  <div id="result" hidden></div>
+
+  <footer>一般社団法人暁月｜PALUXホールディングスグループ<br>本診断は組織の状態を見立てるための簡易チェックです。<br>© 一般社団法人暁月　本診断の設問・構成の無断転載を禁じます。</footer>
+</div>
+
+<script>
+/* 選択肢は良い順に並べる（左上=3点 … 最後=0点） */
+const STAGES=[
+ {key:"s1",name:"実態をつかむ",sub:"組織の今を正しく知っているか",
+  qs:[["最後に辞めた社員の退職理由を、本人から直接聞いた言葉で説明できますか。",["本人の言葉で説明できる","管理職などから聞いた理由なら言える","退職届に書かれた理由しか知らない","思い出せない・分からない"]],
+      ["社員の困りごとを、管理職を通さずに直接耳にしたのはいつですか。",["この1か月以内","この半年以内","1年以上前","思い出せない"]],
+      ["部署ごとの残業時間や有給の取得状況を、おおよその数字で答えられますか。",["部署ごとに数字で言える","全社の数字なら言える","感覚でしか言えない","分からない"]],
+      ["この半年で、社員の不満や不調に、表に出る前に気づけたことは何件ありますか。",["3件以上","1〜2件","気づいたのは表に出てからだった","思い当たらない"]]],
+  sym:["退職や不調が「突然」に見えている可能性があります","経営者に届く情報が、管理職のフィルターを通ったものに偏っているかもしれません","手を打つ前の「見立て」が感覚に頼っている状態です"]},
+ {key:"s2",name:"見方を広げる",sub:"違う視点を取り入れられているか",
+  qs:[["この1か月で、社員から反対意見や違う提案を受けたのは何回ですか。",["3回以上","1〜2回","0回","思い出せない"]],
+      ["社員の意見を聞いて、自分の考えを変えたのは最後にいつですか。",["この3か月以内","この1年以内","1年以上前","思い出せない"]],
+      ["直近のトラブルの話し合いで、最初に話題になったのは何でしたか。",["何が起きたか、仕組みのどこに問題があったか","原因と担当者の両方","誰の責任か","話し合いの場がなかった・分からない"]],
+      ["自分と違う見方をする社員を、名前で何人挙げられますか。",["3人以上","2人","1人","思い浮かばない"]]],
+  sym:["社員が本音を言う前に、話を閉じてしまっている場面があるかもしれません","同じ見方で同じ打ち手を繰り返している可能性があります","失敗の報告が遅れやすい空気が生まれている兆しがあります"]},
+ {key:"s3",name:"目指す姿をそろえる",sub:"向かう先が共有されているか",
+  qs:[["会社が大事にしていることを、社員が自分の言葉で話すのを最後に聞いたのはいつですか。",["この1か月以内","この半年以内","聞いた覚えがない","そもそも言葉になっていない"]],
+      ["3年後の会社の姿について、管理職と時間をとって話し合ったのはいつですか。",["この半年以内","この1年以内","1年以上前","話し合ったことはない"]],
+      ["評価の基準は、社員にどのような形で伝わっていますか。",["文書があり、面談で説明している","文書はあるが、説明はしていない","評価する人の判断に任せている","決まった基準はない"]],
+      ["新しく入った人に、会社の考え方を伝える場はありますか。",["決まった場と資料がある","担当者が口頭で伝えている","配属先に任せている","特にない"]]],
+  sym:["社員それぞれが「頑張る方向」を自分で決めている状態かもしれません","理念が掲示物にとどまり、日々の判断とつながっていない可能性があります","評価への納得感の低さが、静かな離職の芽になりやすい状態です"]},
+ {key:"s4",name:"行動に移す",sub:"決めたことが現場で動いているか",
+  qs:[["管理職と部下の1対1の面談は、どのくらい行われていますか。",["月1回以上、全員と","月1回以上、一部の人と","評価の時期だけ","行っていない・分からない"]],
+      ["直近3回の会議のうち、「誰が・いつまでに・何をやるか」まで決めて終わったのは何回ですか。",["3回","1〜2回","0回","分からない"]],
+      ["新人や若手の育成計画は、どのような形になっていますか。",["計画書があり、定期的に見直している","計画書はあるが、見直していない","OJTに任せている","特にない・分からない"]],
+      ["この1年で、社員の提案が実際に試された例は何件ありますか。",["3件以上","1〜2件","0件","分からない"]]],
+  sym:["方針は決まっても、現場で止まっている取り組みがあるかもしれません","育成が人によってばらつき、管理職の負担が偏っている可能性があります","提案しても変わらない経験が、社員の口を重くしている兆しがあります"]},
+ {key:"s5",name:"続けて支える",sub:"取り組みと人を支え続けているか",
+  qs:[["この1か月で、成果ではなく取り組みの過程をほめたのは何回ですか。",["3回以上","1〜2回","0回","思い出せない"]],
+      ["入社3年以内の社員一人ひとりの様子を、最後に確かめたのはいつですか。",["この1か月以内","この3か月以内","半年以上前","確かめていない・分からない"]],
+      ["始めた取り組みを振り返り、やり方を直す時間を最後にとったのはいつですか。",["この3か月以内","この1年以内","1年以上前","振り返ったことはない"]],
+      ["組織のことで、社外の誰かに本音で相談したのはいつですか。",["この3か月以内","この1年以内","1年以上前","相談できる相手がいない"]]],
+  sym:["始めた施策が、いつの間にか立ち消えになりやすい状態かもしれません","若手が手応えを感じにくく、早期離職の芽があります","経営者が一人で抱え込み、判断の負担が大きくなっている可能性があります"]}
+];
+const UNKNOWN=/思い出せない|分からない|思い当たらない|覚えがない|思い浮かばない/;
+const form=document.getElementById("dock");
+let n=0;const QLIST=[];
+STAGES.forEach((s,si)=>{
+  const sec=document.createElement("section");sec.className="stage";
+  sec.innerHTML=`<h2><span class="ic">${si+1}</span>${s.name}<span class="sub">${s.sub}</span></h2>`;
+  s.qs.forEach(([q,opts],qi)=>{
+    n++;const id=`${s.key}q${qi}`;QLIST.push({id,no:n,q,opts});
+    const d=document.createElement("div");d.className="q";
+    d.innerHTML=`<p><span class="no">Q${String(n).padStart(2,"0")}</span>${q}</p><div class="opts" role="radiogroup" aria-label="Q${n}">`+
+      opts.map((l,v)=>`<label><input type="radio" name="${id}" id="${id}_${v}" value="${3-v}"><span>${l}</span></label>`).join("")+`</div>`;
+    sec.appendChild(d);
+  });
+  form.appendChild(sec);
+});
+const prog=document.getElementById("prog"),go=document.getElementById("go");
+function answered(){return form.querySelectorAll("input:checked").length}
+form.addEventListener("change",()=>{const a=answered();prog.textContent=`${a} / 20 回答済み`;go.disabled=a<20});
+go.addEventListener("click",()=>show(false));
+
+function band(v){
+  if(v>=80)return{t:"良好",c:"c-ok"};
+  if(v>=60)return{t:"経過観察",c:"c-warn"};
+  if(v>=40)return{t:"要注意",c:"c-alert"};
+  return{t:"要精密検査",c:"c-deep"};
+}
+function radar(scores){
+  const W=320,H=300,cx=160,cy=152,R=100,k=scores.length;
+  const pt=(i,r)=>{const a=-Math.PI/2+i*2*Math.PI/k;return[cx+r*Math.cos(a),cy+r*Math.sin(a)]};
+  let g="";
+  [25,50,75,100].forEach(lv=>{g+=`<polygon points="${scores.map((_,i)=>pt(i,R*lv/100).join(",")).join(" ")}" fill="none" stroke="var(--line)" stroke-width="1"/>`});
+  scores.forEach((_,i)=>{const[x,y]=pt(i,R);g+=`<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="var(--line)"/>`});
+  const poly=scores.map((s,i)=>pt(i,R*s.v/100).join(",")).join(" ");
+  g+=`<polygon points="${poly}" fill="var(--gold)" fill-opacity=".18" stroke="var(--gold)" stroke-width="2"/>`;
+  const min=Math.min(...scores.map(s=>s.v));
+  scores.forEach((s,i)=>{const[x,y]=pt(i,R*s.v/100);const low=s.v===min;
+    g+=`<circle cx="${x}" cy="${y}" r="${low?5:3.5}" fill="${low?'var(--terra)':'var(--gold)'}"/>`;
+    const[lx,ly]=pt(i,R+26);
+    g+=`<text x="${lx}" y="${ly}" text-anchor="middle" dominant-baseline="middle" font-size="12" fill="${low?'var(--terra)':'var(--ink)'}" font-family="var(--font)">${i+1}. ${s.name}</text>`});
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="5つの観点の得点">${g}</svg>`;
+}
+function show(isSample){
+  const scores=STAGES.map(s=>{
+    const vals=s.qs.map((_,qi)=>+form.querySelector(`input[name="${s.key}q${qi}"]:checked`).value);
+    return{name:s.name,v:Math.round(vals.reduce((a,b)=>a+b,0)/12*100),sym:s.sym};
+  });
+  const total=Math.round(scores.reduce((a,s)=>a+s.v,0)/scores.length);
+  const min=Math.min(...scores.map(s=>s.v));
+  const stuck=scores.map((s,i)=>({...s,i})).filter(s=>s.v===min);
+  const first=stuck[0];
+  const unknowns=QLIST.filter(q=>{const c=form.querySelector(`input[name="${q.id}"]:checked`);return c&&UNKNOWN.test(q.opts[3-c.value])&&+c.value===0});
+  const high=total>=85;
+  const tb=high?{t:"良好（経営者の目から見て）",c:"c-ok"}:band(total);
+  const r=document.getElementById("result");
+  r.innerHTML=`
+   ${isSample?'<p class="note">※ サンプル回答による結果例です。</p>':''}
+   <div class="verdict"><span class="lbl">総合所見</span>
+     <span class="big"><span class="${tb.c}">${tb.t}</span>　<span style="font-variant-numeric:tabular-nums">${total}</span><small style="font-size:14px;color:var(--ink-soft)"> / 100</small></span>
+     <span>組織の流れが止まりやすいのは、<b>第${first.i+1}段階「${first.name}」</b>です${stuck.length>1?`（ほか${stuck.length-1}か所も同じ水準）`:""}。</span></div>
+   ${high?`<div class="mirror"><h3>社員から見ても、同じでしょうか</h3>
+     <p>経営者の目から見た組織は、とても良い状態です。ただ、経営者に見えている組織と、社員が毎日感じている組織は、同じとは限りません。組織がうまくいっていると感じている会社ほど、その差に気づく機会が少なくなりがちです。</p>
+     <p>同じ問いに管理職や社員の方にも答えてもらうと、見え方の違いがはっきりします。その違いこそが、次の一手を決める一番の手がかりになります。</p></div>`:""}
+   <div class="grid2">
+     <div class="radar">${radar(scores)}</div>
+     <div class="rows">${scores.map((s,i)=>{const b=band(s.v);return`<div class="row"><span class="nm">${i+1}. ${s.name}</span><span class="sc">${s.v}</span><span class="pill ${b.c}">${b.t}</span></div>`}).join("")}</div>
+   </div>
+   ${unknowns.length?`<div class="unk"><h3>「思い出せない」「分からない」と答えた問い：${unknowns.length}問</h3>
+     <p class="note">点数よりも、ここに大事な手がかりがあります。経営者から見えていない場所で、何かが起きているかもしれません。</p>
+     <ul>${unknowns.map(q=>`<li>Q${String(q.no).padStart(2,"0")} ${q.q}</li>`).join("")}</ul></div>`:""}
+   <div class="focus"><h3>いま表れている可能性のある症状</h3>
+     <ul>${first.sym.map(x=>`<li>${x}</li>`).join("")}</ul>
+     <p class="note">この段階が止まると、後に続く段階の取り組みも根づきにくくなります。</p></div>
+   <div class="next"><h3>この結果の読み解きについて</h3>
+     <p>数字が示しているのは「どこに負荷がかかっているか」までです。なぜそこで止まっているのか、どこから手をつけると組織が動き出すのかは、会社ごとに異なります。暁月の無料相談では、この結果をもとに、原因の見立てと最初の一手を一緒に整理します。${high?"社員の方の見え方を確かめる方法も、ご相談の中でご案内しています。":""}</p>
+     <p><a class="cta" href="https://forms.gle/Yr7xzcNVf9dCAuqC9" target="_blank" rel="noopener">無料相談を申し込む</a></p>
+     <p class="note">お申し込みの際は、下の「結果をコピー」で結果を貼り付けていただくと、当日のお話がスムーズです。</p>
+     <div class="btns"><button type="button" id="copy">結果をコピー</button><button type="button" id="again">答え直す</button></div>
+     <span class="note" id="copied" aria-live="polite"></span></div>`;
+  r.hidden=false;r.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});
+  const txt=`【組織ドック 結果】\n総合：${tb.t} ${total}/100\n`+scores.map((s,i)=>`${i+1}. ${s.name}：${s.v}（${band(s.v).t}）`).join("\n")+`\n止まりやすい段階：第${first.i+1}段階「${first.name}」`+(unknowns.length?`\n思い出せない・分からない：${unknowns.length}問（${unknowns.map(q=>"Q"+q.no).join("、")}）`:"");
+  document.getElementById("copy").onclick=()=>{
+    const m=document.getElementById("copied");
+    try{navigator.clipboard.writeText(txt).then(()=>m.textContent="コピーしました。相談のお申し込み時に貼り付けてください。",()=>m.textContent=txt)}catch(e){m.textContent=txt}
+  };
+  document.getElementById("again").onclick=()=>{form.reset();form.dispatchEvent(new Event("change"));r.hidden=true;window.scrollTo({top:0})};
+}
+</script>
+</body>
+</html>
